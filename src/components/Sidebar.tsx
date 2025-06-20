@@ -30,7 +30,7 @@ const Sidebar: React.FC<SidebarProps> = ({ theme = 'light', collapsed, setCollap
     `}>
       {/* Brand and Collapse Button */}
       <div className={`flex items-center justify-between p-6 border-b ${border} ${collapsed ? 'justify-center' : ''}`}>
-        <span className={`font-extrabold text-2xl tracking-tight ${collapsed ? 'hidden' : ''}`}>Your Pay</span>
+        <NavLink to="/" className={`font-extrabold text-2xl tracking-tight ${collapsed ? 'hidden' : ''}`}>Your Pay</NavLink>
         <button className={`ml-2 p-1 rounded hover:bg-white/10`} onClick={() => setCollapsed(!collapsed)} aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}>
           <ChevronLeft size={22} className={`${collapsed ? 'rotate-180' : ''}`} />
         </button>
@@ -67,7 +67,7 @@ const Sidebar: React.FC<SidebarProps> = ({ theme = 'light', collapsed, setCollap
           </div>
         </nav>
       </div>
-      <div className={`p-4 border-t ${border} text-xs ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'} ${collapsed ? 'hidden' : ''}`}>Business Account<br/>Premium Plan • UPI Virtual</div>
+      <div className={`p-4 border-t ${border} text-xs ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'} ${collapsed ? 'hidden' : ''}`}>Business Account<br/></div>
     </aside>
   );
 };
