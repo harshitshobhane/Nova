@@ -107,7 +107,7 @@ const Dashboard = () => {
           <div className={`flex-1 ${cardBg} rounded-xl shadow p-4 sm:p-6 flex flex-col gap-3 sm:gap-4 border ${cardBorder}`}>
             <div className="flex items-center mb-2">
               <h2 className={`text-base sm:text-lg font-semibold ${highlightText} flex-1`}>Consumer Services (B2C)</h2>
-              <span className="bg-[#ececf6] ${highlightText} text-xs font-medium px-2 py-1 rounded">New</span>
+              {/* <span className="bg-[#ececf6] ${highlightText} text-xs font-medium px-2 py-1 rounded">New</span> */}
             </div>
             <div className="space-y-2 sm:space-y-3">
               <button className={`w-full flex items-center ${b2cButtonBg} ${b2cButtonText} font-medium px-3 sm:px-5 py-2 sm:py-3 rounded-lg shadow-sm transition-all text-sm sm:text-base gap-2 border ${b2cBadgeBorder}`}>
