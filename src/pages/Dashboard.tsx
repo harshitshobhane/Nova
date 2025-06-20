@@ -72,30 +72,30 @@ const Dashboard = () => {
         <div className={`flex-1 ${cardBg} rounded-xl shadow p-4 sm:p-6 flex flex-col gap-3 sm:gap-4 border ${cardBorder}`}>
           <h2 className={`text-base sm:text-lg font-semibold ${headingText} mb-2`}>Quick Actions</h2>
           <div className="space-y-2 sm:space-y-3">
-            <button onClick={() => navigate('/qr')} className={`w-full flex items-center ${infoBg} hover:bg-blue-100 ${statText} font-medium px-3 sm:px-5 py-2 sm:py-3 rounded-lg shadow-sm transition-all text-sm sm:text-base gap-2 border ${cardBorder}`}>
+            <button onClick={() => navigate('/dashboard/qr')} className={`w-full flex items-center ${infoBg} hover:bg-blue-100 ${statText} font-medium px-3 sm:px-5 py-2 sm:py-3 rounded-lg shadow-sm transition-all text-sm sm:text-base gap-2 border ${cardBorder}`}>
               <QrCode className="h-4 w-4 sm:h-5 sm:w-5" />
               <span className="flex-1 text-left">Generate QR Code</span>
               <span className="hidden sm:block text-xs ${subText}">Create QR codes for payments</span>
             </button>
-            <button onClick={() => navigate('/send')} className={`w-full flex items-center ${infoBg} hover:bg-blue-100 ${statText} font-medium px-3 sm:px-5 py-2 sm:py-3 rounded-lg shadow-sm transition-all text-sm sm:text-base gap-2 border ${cardBorder}`}>
+            <button onClick={() => navigate('/dashboard/send')} className={`w-full flex items-center ${infoBg} hover:bg-blue-100 ${statText} font-medium px-3 sm:px-5 py-2 sm:py-3 rounded-lg shadow-sm transition-all text-sm sm:text-base gap-2 border ${cardBorder}`}>
               <Send className="h-4 w-4 sm:h-5 sm:w-5" />
               <span className="flex-1 text-left">Send Money</span>
               <span className="hidden sm:block text-xs ${subText}">Transfer funds instantly</span>
             </button>
-            <button onClick={() => navigate('/bulk')} className={`w-full flex items-center ${infoBg} hover:bg-blue-100 ${statText} font-medium px-3 sm:px-5 py-2 sm:py-3 rounded-lg shadow-sm transition-all text-sm sm:text-base gap-2 border ${cardBorder}`}>
+            <button onClick={() => navigate('/dashboard/bulk')} className={`w-full flex items-center ${infoBg} hover:bg-blue-100 ${statText} font-medium px-3 sm:px-5 py-2 sm:py-3 rounded-lg shadow-sm transition-all text-sm sm:text-base gap-2 border ${cardBorder}`}>
               <Users className="h-4 w-4 sm:h-5 sm:w-5" />
               <span className="flex-1 text-left">Bulk Payments</span>
               <span className="hidden sm:block text-xs ${subText}">Pay multiple vendors</span>
             </button>
-            <button onClick={() => navigate('/invoices')} className={`w-full flex items-center ${infoBg} hover:bg-blue-100 ${statText} font-medium px-3 sm:px-5 py-2 sm:py-3 rounded-lg shadow-sm transition-all text-sm sm:text-base gap-2 border ${cardBorder}`}>
+            <button onClick={() => navigate('/dashboard/invoices')} className={`w-full flex items-center ${infoBg} hover:bg-blue-100 ${statText} font-medium px-3 sm:px-5 py-2 sm:py-3 rounded-lg shadow-sm transition-all text-sm sm:text-base gap-2 border ${cardBorder}`}>
               <FileText className="h-4 w-4 sm:h-5 sm:w-5" />
               <span className="flex-1 text-left">Create Invoice</span>
               <span className="hidden sm:block text-xs ${subText}">Generate professional invoices</span>
             </button>
           </div>
           <div className="flex mt-3 sm:mt-4 gap-2">
-            <button onClick={() => navigate('/transactions')} className={`flex-1 ${infoBg} hover:bg-blue-100 ${statText} font-medium py-2 rounded border ${cardBorder} text-sm`}>Transactions</button>
-            <button onClick={() => navigate('/analytics')} className={`flex-1 ${infoBg} hover:bg-blue-100 ${statText} font-medium py-2 rounded border ${cardBorder} text-sm`}>Analytics</button>
+            <button onClick={() => navigate('/dashboard/transactions')} className={`flex-1 ${infoBg} hover:bg-blue-100 ${statText} font-medium py-2 rounded border ${cardBorder} text-sm`}>Transactions</button>
+            <button onClick={() => navigate('/dashboard/analytics')} className={`flex-1 ${infoBg} hover:bg-blue-100 ${statText} font-medium py-2 rounded border ${cardBorder} text-sm`}>Analytics</button>
           </div>
         </div>
         {/* Consumer Services (B2C) */}
