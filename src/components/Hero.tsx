@@ -177,20 +177,20 @@ const Hero: React.FC<HeroProps> = ({ theme, onThemeToggle }) => {
         </div>
       </div>
         {/* Hero Card Overlay */}
-      <div className="relative max-w-7xl mx-auto text-center z-10 pt-40">
+      <div className="relative max-w-7xl mx-auto text-center z-10 pt-28 sm:pt-32 md:pt-40 px-4">
         <div className={`inline-flex items-center px-4 py-2 rounded-full border mb-8 animate-fade-in shadow-lg
           ${theme === 'dark' ? 'bg-gray-800 border-gray-600 text-white' : 'bg-gray-100 border-gray-300 text-gray-800'}`}
         >
           <span className="text-sm font-medium">AI-Powered Payment Intelligence</span>
           </div>
-          <h1 className={`text-6xl md:text-8xl font-bold mb-6 leading-tight animate-fade-in`} style={{color: theme === 'dark' ? '#fff' : '#23263a', textShadow: theme === 'dark' ? '0 4px 32px #0002' : 'none'}}>
+          <h1 className={`text-4xl sm:text-6xl md:text-8xl font-bold mb-6 leading-tight animate-fade-in`} style={{color: theme === 'dark' ? '#fff' : '#23263a', textShadow: theme === 'dark' ? '0 4px 32px #0002' : 'none'}}>
             <span className="block animate-slide-up">स्मार्ट <span className="bg-gradient-to-r from-orange-400 to-green-400 bg-clip-text text-transparent"> Payment </span>Solutions</span>
           </h1>
-          <p className={`text-xl md:text-2xl mb-12 max-w-4xl mx-auto leading-relaxed animate-fade-in animate-delay-200 ${theme === 'dark' ? 'text-gray-100' : 'text-gray-700'}`}>भारत का सबसे उन्नत AI-powered payment platform. Revolutionize your B2B and B2C transactions with cutting-edge technology, seamless UPI integration, and enterprise-grade security.</p>
-          <div className="flex justify-center items-center mb-16 animate-fade-in animate-delay-400">
+          <p className={`text-lg sm:text-xl md:text-2xl mb-12 max-w-4xl mx-auto leading-relaxed animate-fade-in animate-delay-200 ${theme === 'dark' ? 'text-gray-100' : 'text-gray-700'}`}>भारत का सबसे उन्नत AI-powered payment platform. Revolutionize your B2B and B2C transactions with cutting-edge technology, seamless UPI integration, and enterprise-grade security.</p>
+          <div className="flex justify-center items-center mb-12 sm:mb-16 animate-fade-in animate-delay-400">
             <button
               onClick={handleStartTrial}
-              className={`px-10 py-4 rounded-full border text-2xl font-medium shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-400 active:scale-95 ${theme === 'dark' ? 'bg-white/80 border-gray-300 text-gray-900 hover:bg-orange-50 hover:border-orange-400' : 'bg-orange-400 border-orange-500 text-white hover:bg-orange-500 hover:border-orange-600'}`}
+              className={`px-8 sm:px-10 py-3 sm:py-4 rounded-full border text-lg sm:text-xl md:text-2xl font-medium shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-400 active:scale-95 ${theme === 'dark' ? 'bg-white/80 border-gray-300 text-gray-900 hover:bg-orange-50 hover:border-orange-400' : 'bg-orange-400 border-orange-500 text-white hover:bg-orange-500 hover:border-orange-600'}`}
               style={{ minWidth: 200 }}
             >
               Your Pay
@@ -201,21 +201,21 @@ const Hero: React.FC<HeroProps> = ({ theme, onThemeToggle }) => {
             <div className="text-center">
               <div className="flex items-center justify-center mb-2">
                 <svg className="h-6 w-6 text-green-400 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 12l5 5L20 7" /></svg>
-                <span className={`text-4xl font-bold ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>99.9%</span>
+                <span className={`text-3xl sm:text-4xl font-bold ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>99.9%</span>
               </div>
               <p className={`font-medium ${theme === 'dark' ? 'text-gray-200' : 'text-gray-700'}`}>Uptime Guarantee</p>
             </div>
             <div className="text-center">
               <div className="flex items-center justify-center mb-2">
                 <svg className="h-6 w-6 text-orange-400 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 11V3m0 0L4 14h7v7l9-11h-7z" /></svg>
-                <span className={`text-4xl font-bold ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>256-bit</span>
+                <span className={`text-3xl sm:text-4xl font-bold ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>256-bit</span>
               </div>
               <p className={`font-medium ${theme === 'dark' ? 'text-gray-200' : 'text-gray-700'}`}>Encryption</p>
             </div>
             <div className="text-center">
               <div className="flex items-center justify-center mb-2">
                 <svg className="h-6 w-6 text-yellow-400 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
-                <span className={`text-4xl font-bold ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>1.2s</span>
+                <span className={`text-3xl sm:text-4xl font-bold ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>1.2s</span>
               </div>
               <p className={`font-medium ${theme === 'dark' ? 'text-gray-200' : 'text-gray-700'}`}>Avg Processing Time</p>
           </div>

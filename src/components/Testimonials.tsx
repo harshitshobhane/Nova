@@ -45,39 +45,39 @@ const Testimonials: React.FC<TestimonialsProps> = ({ theme = 'dark' }) => {
   const companyText = theme === 'dark' ? 'text-gray-400' : 'text-gray-500';
 
   return (
-    <section className={`py-24 px-4 relative ${sectionBg}`}>
+    <section className={`py-16 sm:py-20 md:py-24 px-4 relative ${sectionBg}`}>
       <div className="max-w-7xl mx-auto">
-        <div className="text-center mb-16">
-          <h2 className={`text-5xl font-bold ${headingText} mb-6`}>
+        <div className="text-center mb-12 md:mb-16">
+          <h2 className={`text-3xl sm:text-4xl md:text-5xl font-bold ${headingText} mb-4 md:mb-6`}>
             Trusted by 
             <span className="bg-gradient-to-r from-orange-400 to-green-400 bg-clip-text text-transparent"> Indian Leaders</span>
           </h2>
-          <p className={`text-xl ${subText} max-w-3xl mx-auto`}>
+          <p className={`text-lg sm:text-xl ${subText} max-w-3xl mx-auto`}>
             See what our customers are saying about our AI-powered payment platform across India.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
           {testimonials.map((testimonial, index) => (
             <Card 
               key={index}
               className={`${cardBg} backdrop-blur-lg border ${cardBorder} hover:bg-white/20 transition-all duration-300 hover:scale-105`}
             >
-              <CardContent className="p-8">
+              <CardContent className="p-6 sm:p-8">
                 <div className="flex items-center mb-4">
                   {[...Array(testimonial.rating)].map((_, i) => (
                     <Star key={i} className="h-5 w-5 text-yellow-400 fill-current" />
                   ))}
                 </div>
                 
-                <p className={`${testimonialContent} mb-6 leading-relaxed`}>"{testimonial.content}"</p>
+                <p className={`${testimonialContent} mb-6 leading-relaxed text-base`}>"{testimonial.content}"</p>
                 
                 <div className="flex items-center">
-                  <div className="w-12 h-12 bg-gradient-to-r from-orange-600 to-green-600 rounded-full flex items-center justify-center text-white font-semibold mr-4">
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-r from-orange-600 to-green-600 rounded-full flex items-center justify-center text-white font-semibold mr-4 flex-shrink-0">
                     {testimonial.avatar}
                   </div>
                   <div>
-                    <p className={`${nameText} font-semibold`}>{testimonial.name}</p>
+                    <p className={`${nameText} font-semibold text-base sm:text-lg`}>{testimonial.name}</p>
                     <p className={`${roleText} text-sm`}>{testimonial.role}</p>
                     <p className={`${companyText} text-xs`}>{testimonial.company}</p>
                   </div>
