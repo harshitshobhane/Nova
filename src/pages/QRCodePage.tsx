@@ -236,9 +236,9 @@ const QRCodePage = () => {
   const inputBg = 'bg-slate-800';
 
   return (
-    <div className="p-4 md:p-8 grid grid-cols-1 lg:grid-cols-3 gap-8 w-full text-white">
+    <div className="p-4 md:p-8 grid grid-cols-1 lg:grid-cols-3 gap-8 text-white">
       {/* Left Column: Form */}
-      <motion.div layout className={`lg:col-span-1 space-y-6 ${cardBg} p-6 rounded-lg border ${border}`}>
+      <motion.div className={`lg:col-span-1 space-y-6 ${cardBg} p-6 rounded-lg border ${border} min-w-0`}>
         <fieldset disabled={saveState === 'saving'} className="space-y-6">
           <h2 className={`text-2xl font-bold ${textPrimary}`}>{editingQR ? "Edit QR Code" : "Create QR Code"}</h2>
           
@@ -250,7 +250,7 @@ const QRCodePage = () => {
           <div className="space-y-2">
             <Label htmlFor="label" className={textSecondary}>Label / Name</Label>
             <Input id="label" name="label" value={label} onChange={e => setLabel(e.target.value)} placeholder="e.g., John Doe" className={`${inputBg} ${border}`} />
-          </div>
+              </div>
 
           <div className="space-y-2">
             <Label className={textSecondary}>Payment Type</Label>
@@ -263,7 +263,7 @@ const QRCodePage = () => {
                   <ToggleGroupItem value="Fixed" aria-label="Select Fixed Amount" className="data-[state=on]:bg-indigo-500 data-[state=on]:text-white">Fixed Amount</ToggleGroupItem>
                   <ToggleGroupItem value="Dynamic" aria-label="Select Any Amount" className="data-[state=on]:bg-indigo-500 data-[state=on]:text-white">Any Amount</ToggleGroupItem>
               </ToggleGroup>
-          </div>
+              </div>
 
           <AnimatePresence>
             {type === 'Fixed' && (
@@ -298,7 +298,7 @@ const QRCodePage = () => {
                 <ImagePlus className={`mx-auto h-10 w-10 ${textSecondary}`} />
                 <div className="mt-4 flex text-sm leading-6 text-gray-400">
                   <p className="pl-1">{logoImage ? "Click to change logo" : "Click to upload a logo"}</p>
-                </div>
+              </div>
                 <p className="text-xs leading-5 text-gray-400">PNG, JPG, SVG up to 1MB</p>
               </div>
             </Label>
@@ -324,11 +324,11 @@ const QRCodePage = () => {
                   }} variant="ghost" size="icon" className="text-slate-400 hover:text-white flex-shrink-0" whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
                     <X className="h-5 w-5" />
                   </MotionButton>
-                </div>
+            </div>
               </motion.div>
             )}
             </AnimatePresence>
-          </div>
+              </div>
 
           <div className="flex flex-col sm:flex-row gap-3 pt-4">
             <MotionButton onClick={handleSaveOrUpdate} disabled={!isFormValid || saveState === 'saving'} className="w-full transition-all duration-200 bg-indigo-600 hover:bg-indigo-700 text-white" whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
@@ -347,7 +347,7 @@ const QRCodePage = () => {
       </motion.div>
       
       {/* Middle Column: List */}
-      <div className={`lg:col-span-1 space-y-4`}>
+      <div className={`lg:col-span-1 space-y-4 min-w-0`}>
         <div className={`${cardBg} p-6 rounded-lg border ${border}`}>
           <h2 className={`text-xl font-bold mb-4 ${textPrimary} flex items-center`}><QrCode className="mr-2" />My QR Codes</h2>
           <div className="relative mb-4">
@@ -381,13 +381,13 @@ const QRCodePage = () => {
                                 width: 8,
                                 excavate: true,
                             } : undefined}
-                        />
-                    </div>
+              />
+            </div>
                     <div className='truncate'>
                       <p className={`${textPrimary} font-semibold truncate`}>{qr.label}</p>
                       <p className={`${textSecondary} text-sm`}>{qr.type}{qr.type === 'Fixed' && qr.amount ? `: ₹${qr.amount}` : ''}</p>
-                    </div>
-                  </div>
+                </div>
+              </div>
                   <div className={`flex items-center space-x-1 flex-shrink-0 transition-opacity duration-300 ${selectedQR?.id === qr.id ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}>
                     <motion.div 
                         onClick={(e) => { e.stopPropagation(); handleEdit(qr); }}
@@ -411,12 +411,12 @@ const QRCodePage = () => {
                 </motion.div>
               )) : <p className={textSecondary}>{searchQuery ? 'No matching QR codes found.' : 'No saved QR codes yet.'}</p>}
             </AnimatePresence>
-          </div>
+            </div>
         </div>
       </div>
 
       {/* Right Column: Preview */}
-      <div className="lg:col-span-1">
+      <div className="lg:col-span-1 min-w-0">
         <Card className={`${cardBg} border ${border} sticky top-24`}>
           <CardHeader>
             <h2 className={`text-xl font-bold ${textPrimary}`}>Live Preview</h2>
@@ -448,7 +448,7 @@ const QRCodePage = () => {
                 <div className="w-full grid grid-cols-2 gap-3 pt-2">
                   <MotionButton onClick={() => handleDownload('png')} variant="outline" className="w-full" whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}><Download className="mr-2 h-4 w-4"/>PNG</MotionButton>
                   <MotionButton onClick={() => handleDownload('svg')} variant="outline" className="w-full" whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}><Download className="mr-2 h-4 w-4"/>SVG</MotionButton>
-                </div>
+              </div>
                 {navigator.share && <MotionButton onClick={handleShare} variant="outline" className="w-full col-span-2" whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}><Share2 className="mr-2 h-4 w-4" />Share</MotionButton>}
               </>
             ) : (

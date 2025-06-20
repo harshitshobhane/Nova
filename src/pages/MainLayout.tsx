@@ -8,10 +8,9 @@ const MainLayout = () => {
   const [theme, setTheme] = useState<'light' | 'dark'>('dark');
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
-  const bg = theme === 'dark' ? 'bg-[#181c2a]' : 'bg-[#f6f7fb]';
 
   return (
-    <div className={`flex h-screen overflow-hidden ${bg}`}>
+    <div className={`flex min-h-screen overflow-x-hidden ${theme === 'dark' ? 'bg-[#181c2a]' : 'bg-[#f6f7fb]'}`}>
       {/* Mobile Sidebar Overlay */}
       {mobileSidebarOpen && (
         <div 
@@ -21,14 +20,16 @@ const MainLayout = () => {
       )}
       
       {/* Sidebar */}
-      <div className={`fixed lg:static h-full z-50 transition-transform duration-300 ${mobileSidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0`}>
+      <div className={`fixed h-full z-50 ${mobileSidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'} transition-transform duration-300`}>
         <Sidebar theme={theme} collapsed={sidebarCollapsed} setCollapsed={setSidebarCollapsed} />
       </div>
       
       {/* Main Content */}
-      <div className="flex-1 flex flex-col overflow-y-auto">
+      <div
+        className={`flex-1 flex flex-col transition-all duration-300 overflow-x-hidden ${sidebarCollapsed ? 'lg:pl-20' : 'lg:pl-64'}`}
+      >
         {/* Top Header */}
-        <header className={`sticky top-0 z-30 p-4 lg:px-6 h-16 flex items-center justify-between lg:justify-end ${bg} border-b ${theme === 'dark' ? 'border-gray-700' : 'border-gray-200'}`}>
+        <header className="w-full p-4 lg:px-6 h-16 flex items-center justify-between lg:justify-end">
             <button
               onClick={() => setMobileSidebarOpen(true)}
               className={`p-2 rounded-lg ${theme === 'dark' ? 'bg-[#23263a] text-white' : 'bg-white text-[#7c3aed]'} border ${theme === 'dark' ? 'border-gray-700' : 'border-gray-200'} lg:hidden`}
@@ -54,10 +55,8 @@ const MainLayout = () => {
         </header>
 
         {/* Main Content Container */}
-        <main className="flex-1 p-4 lg:p-6">
-          <div className="w-full max-w-7xl mx-auto">
-             <Outlet context={{ theme }} />
-          </div>
+        <main className="flex-1 flex flex-col w-full max-w-7xl mx-auto px-4 lg:px-6 pb-8">
+          <Outlet context={{ theme }} />
         </main>
       </div>
     </div>
