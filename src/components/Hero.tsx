@@ -20,6 +20,17 @@ const Hero: React.FC<HeroProps> = ({ theme, onThemeToggle }) => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  useEffect(() => {
+    if (mobileMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'auto';
+    }
+    return () => {
+      document.body.style.overflow = 'auto';
+    };
+  }, [mobileMenuOpen]);
+
   const handleThemeToggle = () => {
     const newTheme = theme === 'dark' ? 'light' : 'dark';
     onThemeToggle(newTheme);
@@ -67,62 +78,9 @@ const Hero: React.FC<HeroProps> = ({ theme, onThemeToggle }) => {
             </a>
           </div>
         {/* Mobile Hamburger */}
-        <button className="md:hidden p-2 rounded focus:outline-none" onClick={() => setMobileMenuOpen(!mobileMenuOpen)} aria-label="Open menu">
-          {mobileMenuOpen ? <X size={28} className={navText} /> : <Menu size={28} className={navText} />}
+        <button className="md:hidden p-2 rounded focus:outline-none" onClick={() => setMobileMenuOpen(true)} aria-label="Open menu">
+          <Menu size={28} className={navText} />
         </button>
-        {/* Mobile Menu */}
-        {mobileMenuOpen && (
-          <div className={`fixed inset-0 z-30 bg-black/70 flex flex-col items-end md:hidden`}>
-            <div className={`w-3/4 max-w-xs bg-white dark:bg-[#181c2a] h-full p-6 flex flex-col gap-6 shadow-2xl`}>
-              <button className="self-end mb-4" onClick={() => setMobileMenuOpen(false)} aria-label="Close menu">
-                <X size={28} className="text-gray-700 dark:text-gray-200" />
-              </button>
-              <a href="#home" data-scroll className="nav-link text-lg font-semibold" onClick={() => setMobileMenuOpen(false)}>Home</a>
-              <a href="#features" data-scroll className="nav-link text-lg font-semibold" onClick={() => setMobileMenuOpen(false)}>Features</a>
-              <a href="#how" data-scroll className="nav-link text-lg font-semibold" onClick={() => setMobileMenuOpen(false)}>How It Works</a>
-              <a href="#pricing" data-scroll className="nav-link text-lg font-semibold" onClick={() => setMobileMenuOpen(false)}>Pricing</a>
-              <a href="#testimonials" data-scroll className="nav-link text-lg font-semibold" onClick={() => setMobileMenuOpen(false)}>Testimonials</a>
-              <a
-                onClick={e => { e.preventDefault(); navigate('/dashboard'); setMobileMenuOpen(false); }}
-                href="/dashboard"
-                className="px-5 py-2 rounded-full bg-white border border-gray-300 text-gray-900 font-semibold shadow-sm hover:bg-gray-50 hover:border-orange-400 hover:shadow-lg hover:scale-105 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-orange-400 active:scale-95 cursor-pointer"
-                tabIndex={0}
-                role="button"
-              >
-                Dashboard
-              </a>
-              <div className="flex flex-col gap-4 mt-8">
-                {/* Theme Toggle */}
-                <button
-                  aria-label="Toggle theme"
-                  onClick={handleThemeToggle}
-                  className={`relative w-14 h-8 flex items-center rounded-full border transition-colors duration-300 focus:outline-none focus:ring-0
-                    ${theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-gray-200 border-gray-300'}
-                  `}
-                >
-                  <span className={`absolute left-1 top-1 w-6 h-6 rounded-full flex items-center justify-center transition-all duration-300
-                    ${theme === 'dark' ? 'translate-x-6 bg-gray-900 text-yellow-300' : 'translate-x-0 bg-white text-yellow-500'}`}
-                  >
-                    {theme === 'dark' ? <Moon size={18} /> : <Sun size={18} />}
-                  </span>
-                </button>
-                {/* Login Button */}
-                <a
-                  onClick={e => { e.preventDefault(); navigate('/dashboard'); setMobileMenuOpen(false); }}
-                  href="/dashboard"
-                  className={`px-8 py-2 rounded-full font-semibold text-base tracking-wide transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-orange-400 active:scale-98
-                    ${theme === 'dark'
-                      ? 'bg-gradient-to-r from-orange-500 to-purple-600 text-white hover:from-orange-600 hover:to-purple-700'
-                      : 'bg-gradient-to-r from-orange-400 to-purple-400 text-white hover:from-orange-500 hover:to-purple-500'}
-                    hover:scale-105
-                  `}
-                >
-                  Login
-                </a>
-              </div>
-            </div>
-          </div>
-        )}
         {/* End Mobile Menu */}
         <div className="hidden md:flex items-center">
             {/* Theme Toggle Switch */}
@@ -154,6 +112,70 @@ const Hero: React.FC<HeroProps> = ({ theme, onThemeToggle }) => {
           </a>
           </div>
         </nav>
+
+      {/* Overlay */}
+      <div 
+        className={`fixed inset-0 bg-black/60 z-30 md:hidden transition-opacity duration-300 ease-in-out ${mobileMenuOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
+        onClick={() => setMobileMenuOpen(false)}
+      ></div>
+
+      {/* Panel */}
+      <div 
+        className={`fixed top-0 right-0 h-full w-4/5 max-w-sm bg-white dark:bg-gray-900 z-40 transform transition-transform duration-300 ease-in-out md:hidden flex flex-col ${mobileMenuOpen ? 'translate-x-0' : 'translate-x-full'}`}
+      >
+        <div className="p-6 flex flex-col h-full">
+          <div className="flex justify-between items-center mb-8">
+            <span className={`text-2xl font-semibold tracking-tight text-gray-900 dark:text-white`}>Your Pay</span>
+            <button onClick={() => setMobileMenuOpen(false)} aria-label="Close menu">
+              <X size={28} className="text-gray-700 dark:text-gray-200" />
+            </button>
+          </div>
+          
+          <nav className="flex flex-col space-y-4">
+            <a href="#home" data-scroll className="nav-link text-lg font-medium text-gray-700 dark:text-gray-300 hover:text-orange-500" onClick={() => setMobileMenuOpen(false)}>Home</a>
+            <a href="#features" data-scroll className="nav-link text-lg font-medium text-gray-700 dark:text-gray-300 hover:text-orange-500" onClick={() => setMobileMenuOpen(false)}>Features</a>
+            <a href="#how" data-scroll className="nav-link text-lg font-medium text-gray-700 dark:text-gray-300 hover:text-orange-500" onClick={() => setMobileMenuOpen(false)}>How It Works</a>
+            <a href="#pricing" data-scroll className="nav-link text-lg font-medium text-gray-700 dark:text-gray-300 hover:text-orange-500" onClick={() => setMobileMenuOpen(false)}>Pricing</a>
+            <a href="#testimonials" data-scroll className="nav-link text-lg font-medium text-gray-700 dark:text-gray-300 hover:text-orange-500" onClick={() => setMobileMenuOpen(false)}>Testimonials</a>
+          </nav>
+
+          <div className="mt-auto pt-6 border-t border-gray-200 dark:border-gray-700 space-y-4">
+            <a
+              onClick={e => { e.preventDefault(); navigate('/dashboard'); setMobileMenuOpen(false); }}
+              href="/dashboard"
+              className="w-full text-center block px-5 py-3 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white font-semibold shadow-sm"
+              role="button"
+            >
+              Dashboard
+            </a>
+            <a
+              onClick={e => { e.preventDefault(); navigate('/dashboard'); setMobileMenuOpen(false); }}
+              href="/dashboard"
+              className={`w-full text-center block px-8 py-3 rounded-lg font-semibold text-base text-white
+                bg-gradient-to-r from-orange-500 to-purple-600 hover:from-orange-600 hover:to-purple-700
+              `}
+              role="button"
+            >
+              Login
+            </a>
+            <div className="flex justify-center pt-4">
+              <button
+                aria-label="Toggle theme"
+                onClick={handleThemeToggle}
+                className={`relative w-14 h-8 flex items-center rounded-full border transition-colors duration-300 focus:outline-none focus:ring-0
+                  ${theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-gray-200 border-gray-300'}
+                `}
+              >
+                <span className={`absolute left-1 top-1 w-6 h-6 rounded-full flex items-center justify-center transition-all duration-300
+                  ${theme === 'dark' ? 'translate-x-6 bg-gray-700 text-yellow-300' : 'translate-x-0 bg-white text-yellow-500'}`}
+                >
+                  {theme === 'dark' ? <Moon size={18} /> : <Sun size={18} />}
+                </span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
         {/* Hero Card Overlay */}
       <div className="relative max-w-7xl mx-auto text-center z-10 pt-40">
         <div className={`inline-flex items-center px-4 py-2 rounded-full border mb-8 animate-fade-in shadow-lg

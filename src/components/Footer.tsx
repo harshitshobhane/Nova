@@ -79,22 +79,22 @@ const Footer: React.FC<FooterProps> = ({ theme = 'dark' }) => {
         <div className={`grid grid-cols-1 md:grid-cols-3 gap-8 mb-12 pt-8 border-t ${border}`}>
           <div className="flex items-center">
             <Mail className="h-5 w-5 text-orange-400 mr-3" />
-            <span className={theme === 'dark' ? 'text-gray-700' : 'text-gray-300'}>support@Your Pay.com</span>
+            <span className={theme === 'dark' ? 'text-gray-700' : 'text-gray-300'}>harshitshobhane348@gmail.com</span>
           </div>
           <div className="flex items-center">
             <Phone className="h-5 w-5 text-green-400 mr-3" />
-            <span className={theme === 'dark' ? 'text-gray-700' : 'text-gray-300'}>+91 98765 43210</span>
+              <span className={theme === 'dark' ? 'text-gray-700' : 'text-gray-300'}>+91 98765 43210</span>
           </div>
           <div className="flex items-center">
             <MapPin className="h-5 w-5 text-yellow-400 mr-3" />
-            <span className={theme === 'dark' ? 'text-gray-700' : 'text-gray-300'}>Mumbai, Maharashtra</span>
+            <span className={theme === 'dark' ? 'text-gray-700' : 'text-gray-300'}>Gurgaon, Haryana</span>
           </div>
         </div>
 
         {/* Bottom */}
         <div className={`pt-8 border-t ${border} flex flex-col md:flex-row justify-between items-center`}>
           <p className={`${theme === 'dark' ? 'text-gray-500' : 'text-gray-400'} text-sm mb-4 md:mb-0`}>
-            © 2024 Your Pay. सभी अधिकार सुरक्षित।
+            © 2025 Your Pay. सभी अधिकार सुरक्षित।
           </p>
           <div className="flex space-x-6">
             <a href="#" className={link + ' text-sm transition-colors'}>Privacy Policy</a>
