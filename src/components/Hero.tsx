@@ -48,7 +48,7 @@ const Hero: React.FC<HeroProps> = ({ theme, onThemeToggle }) => {
     <div className={`relative min-h-screen flex flex-col items-center justify-center px-4 overflow-hidden ${theme === 'dark' ? 'bg-black' : 'bg-white'}`}>
         {/* Navbar */}
       <nav className={`w-full flex items-center justify-between py-6 px-4 md:px-8 fixed top-0 left-0 z-20 transition-colors duration-300 ${navBg}`}>
-        <span className={`text-2xl font-semibold tracking-tight ${navText} cursor-pointer`} onClick={() => navigate('/')}>NovaPay</span>
+        <span className={`text-2xl font-semibold tracking-tight ${navText} cursor-pointer`} onClick={() => navigate('/')}>Your Pay</span>
         {/* Desktop Nav Links */}
         <div className="hidden md:flex items-center gap-6 text-base font-medium">
           <a href="#home" data-scroll className={`nav-link ${navText}`}>Home</a>
@@ -171,7 +171,7 @@ const Hero: React.FC<HeroProps> = ({ theme, onThemeToggle }) => {
               className={`px-10 py-4 rounded-full border text-2xl font-medium shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-400 active:scale-95 ${theme === 'dark' ? 'bg-white/80 border-gray-300 text-gray-900 hover:bg-orange-50 hover:border-orange-400' : 'bg-orange-400 border-orange-500 text-white hover:bg-orange-500 hover:border-orange-600'}`}
               style={{ minWidth: 200 }}
             >
-              NovaPay
+              Your Pay
             </button>
           </div>
           {/* Stats */}

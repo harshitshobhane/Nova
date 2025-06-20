@@ -30,7 +30,7 @@ const Footer: React.FC<FooterProps> = ({ theme = 'dark' }) => {
               <div className="w-10 h-10 bg-gradient-to-r from-orange-600 to-green-600 rounded-lg flex items-center justify-center mr-3">
                 <Zap className={`h-6 w-6 ${icon}`} />
               </div>
-              <span className={`text-2xl font-bold ${text}`}>NovaPay</span>
+              <span className={`text-2xl font-bold ${text}`}>Your Pay</span>
             </div>
             <p className={`${theme === 'dark' ? 'text-gray-700' : 'text-gray-300'} mb-6 max-w-md`}>
               भारत का सबसे उन्नत AI-powered payment platform. Revolutionary payment solutions 
@@ -79,7 +79,7 @@ const Footer: React.FC<FooterProps> = ({ theme = 'dark' }) => {
         <div className={`grid grid-cols-1 md:grid-cols-3 gap-8 mb-12 pt-8 border-t ${border}`}>
           <div className="flex items-center">
             <Mail className="h-5 w-5 text-orange-400 mr-3" />
-            <span className={theme === 'dark' ? 'text-gray-700' : 'text-gray-300'}>support@novapay.com</span>
+            <span className={theme === 'dark' ? 'text-gray-700' : 'text-gray-300'}>support@Your Pay.com</span>
           </div>
           <div className="flex items-center">
             <Phone className="h-5 w-5 text-green-400 mr-3" />
@@ -94,7 +94,7 @@ const Footer: React.FC<FooterProps> = ({ theme = 'dark' }) => {
         {/* Bottom */}
         <div className={`pt-8 border-t ${border} flex flex-col md:flex-row justify-between items-center`}>
           <p className={`${theme === 'dark' ? 'text-gray-500' : 'text-gray-400'} text-sm mb-4 md:mb-0`}>
-            © 2024 NovaPay. सभी अधिकार सुरक्षित।
+            © 2024 Your Pay. सभी अधिकार सुरक्षित।
           </p>
           <div className="flex space-x-6">
             <a href="#" className={link + ' text-sm transition-colors'}>Privacy Policy</a>
