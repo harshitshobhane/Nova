@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
-import { Bell, User, ArrowLeft, Sun, Moon } from 'lucide-react';
+import { Bell, User, ArrowLeft, Sun, Moon, Menu } from 'lucide-react';
 import Sidebar from '../components/Sidebar';
 
 const MainLayout = () => {
@@ -10,35 +10,72 @@ const MainLayout = () => {
   const [theme, setTheme] = useState<'light' | 'dark'>('dark');
   // Sidebar collapse state can be managed here if you want main content to shift
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
 
   // Sidebar width based on collapse state
   const sidebarWidth = sidebarCollapsed ? 80 : 256; // px
 
   return (
     <div className={`flex min-h-screen ${theme === 'dark' ? 'bg-[#181c2a]' : 'bg-[#f6f7fb]'}`}>
+      {/* Mobile Sidebar Overlay */}
+      {mobileSidebarOpen && (
+        <div 
+          className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
+          onClick={() => setMobileSidebarOpen(false)}
+        />
+      )}
+      
       {/* Sidebar */}
-      <Sidebar theme={theme} />
+      <div className={`fixed lg:relative z-50 ${mobileSidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'} transition-transform duration-300`}>
+        <Sidebar theme={theme} />
+      </div>
+      
       {/* Main Content */}
       <div
-        className="flex-1 flex flex-col items-center justify-start transition-all duration-300 pt-8 pb-8 min-h-screen"
-        style={{ marginLeft: sidebarWidth }}
+        className="flex-1 flex flex-col items-center justify-start transition-all duration-300 pt-8 pb-8 min-h-screen w-full lg:w-auto"
+        style={{ marginLeft: window.innerWidth >= 1024 ? sidebarWidth : 0 }}
       >
+        {/* Mobile Header */}
+        <div className="lg:hidden w-full px-4 mb-6">
+          <div className="flex items-center justify-between">
+            <button
+              onClick={() => setMobileSidebarOpen(true)}
+              className={`p-2 rounded-lg ${theme === 'dark' ? 'bg-[#23263a] text-white' : 'bg-white text-[#7c3aed]'} border ${theme === 'dark' ? 'border-gray-700' : 'border-gray-200'}`}
+            >
+              <Menu className="h-5 w-5" />
+            </button>
+            <h1 className={`text-lg font-semibold ${theme === 'dark' ? 'text-white' : 'text-[#23263a]'}`}>Your Pay</h1>
+            <div className="flex items-center space-x-2">
+              <button
+                onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+                className={`p-2 rounded-lg ${theme === 'dark' ? 'bg-[#23263a] text-yellow-400' : 'bg-white text-[#7c3aed]'} border ${theme === 'dark' ? 'border-gray-700' : 'border-gray-200'}`}
+              >
+                {theme === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+              </button>
+              <div className={`w-8 h-8 rounded-full flex items-center justify-center font-semibold text-sm border ${theme === 'dark' ? 'bg-[#23263a] text-[#a78bfa] border-gray-700' : 'bg-white text-[#7c3aed] border-gray-200'}`}>
+                <User className="h-4 w-4" />
+              </div>
+            </div>
+          </div>
+        </div>
+
         {/* Back Icon (all pages except dashboard) */}
         {location.pathname !== '/dashboard' && (
           <button
             onClick={() => navigate('/dashboard')}
-            className="absolute left-24 md:left-80 top-8 bg-white border border-[#ececf6] rounded-full p-2 shadow hover:bg-[#f3f4f6] transition-colors z-10"
+            className={`absolute left-4 lg:left-24 xl:left-80 top-20 lg:top-8 ${theme === 'dark' ? 'bg-[#23263a] border-gray-700' : 'bg-white border-[#ececf6]'} border rounded-full p-2 shadow hover:bg-[#f3f4f6] transition-colors z-10`}
             aria-label="Back to Dashboard"
           >
-            <ArrowLeft className="h-6 w-6 text-[#7c3aed]" />
+            <ArrowLeft className="h-5 w-5 text-[#7c3aed]" />
           </button>
         )}
+        
         {/* Classy Header */}
         {location.pathname === '/dashboard' && (
-          <div className="w-full max-w-6xl mx-auto flex items-center justify-between mb-10 px-2">
-            <div>
-              <h1 className={`text-2xl font-semibold ${theme === 'dark' ? 'text-white' : 'text-[#23263a]'} mb-1`}>Welcome back, <span className="text-[#7c3aed]">Amit</span></h1>
-              <p className={`text-base ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>Your AI-powered payment dashboard</p>
+          <div className="w-full max-w-6xl mx-auto flex flex-col lg:flex-row lg:items-center justify-between mb-6 lg:mb-10 px-4 lg:px-2">
+            <div className="mb-4 lg:mb-0">
+              <h1 className={`text-xl lg:text-2xl font-semibold ${theme === 'dark' ? 'text-white' : 'text-[#23263a]'} mb-1`}>Welcome back, <span className="text-[#7c3aed]">Amit</span></h1>
+              <p className={`text-sm lg:text-base ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>Your AI-powered payment dashboard</p>
             </div>
             <div className="flex items-center space-x-3">
               {/* Theme Toggle */}
@@ -59,8 +96,9 @@ const MainLayout = () => {
             </div>
           </div>
         )}
+        
         {/* Main Content Container */}
-        <div className="w-full max-w-6xl mx-auto flex flex-col gap-8">
+        <div className="w-full max-w-6xl mx-auto flex flex-col gap-6 lg:gap-8 px-4 lg:px-0">
           <Outlet context={{ theme }} />
         </div>
       </div>
