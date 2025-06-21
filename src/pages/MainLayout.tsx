@@ -10,7 +10,7 @@ const MainLayout = () => {
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
 
   return (
-    <div className={`flex min-h-screen overflow-x-hidden ${theme === 'dark' ? 'bg-[#181c2a]' : 'bg-[#f6f7fb]'}`}>
+    <div className={`flex min-h-screen ${theme === 'dark' ? 'bg-[#181c2a]' : 'bg-[#f6f7fb]'}`}>
       {/* Mobile Sidebar Overlay */}
       {mobileSidebarOpen && (
         <div 
@@ -26,7 +26,7 @@ const MainLayout = () => {
       
       {/* Main Content */}
       <div
-        className={`flex-1 flex flex-col transition-all duration-300 overflow-x-hidden ${sidebarCollapsed ? 'lg:pl-20' : 'lg:pl-64'}`}
+        className={`flex-1 flex flex-col w-full transition-all duration-300 ${sidebarCollapsed ? 'lg:pl-20' : 'lg:pl-64'}`}
       >
         {/* Top Header */}
         <header className="w-full p-4 lg:px-6 h-16 flex items-center justify-between lg:justify-end">
@@ -55,7 +55,7 @@ const MainLayout = () => {
         </header>
 
         {/* Main Content Container */}
-        <main className="flex-1 flex flex-col w-full max-w-7xl mx-auto px-4 lg:px-6 pb-8">
+        <main className="flex-1 w-full max-w-7xl mx-auto px-4 lg:px-6 pb-8">
           <Outlet context={{ theme }} />
         </main>
       </div>
