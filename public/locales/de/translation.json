@@ -36,7 +36,8 @@
     "dotStyle": "Punktstil",
     "cornerStyle": "Eckstil",
     "dotStylePlaceholder": "Punktstil auswählen",
-    "cornerStylePlaceholder": "Eckstil auswählen"
+    "cornerStylePlaceholder": "Eckstil auswählen",
+    "previewAriaLabel": "QR-Code in der Vorschau anzeigen"
   },
   "toasts": {
     "logoAdded": "Logo hinzugefügt.",

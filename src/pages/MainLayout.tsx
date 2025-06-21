@@ -47,7 +47,7 @@ const MainLayout = () => {
         className={`flex-1 flex flex-col w-full transition-all duration-300 ${sidebarCollapsed ? 'lg:pl-20' : 'lg:pl-64'}`}
       >
         {/* Top Header */}
-        <header className={`w-full p-4 lg:px-6 h-19 flex items-center justify-between lg:justify-end ${cardBg} border-b ${border}`}>
+        <header className={`w-full p-5 lg:px-6 h-17 flex items-center justify-between lg:justify-end ${cardBg} border-b ${border}`}>
             <button
               onClick={() => setMobileSidebarOpen(true)}
               className={`p-2 rounded-lg ${buttonBg} ${buttonText} border ${buttonBorder} lg:hidden transition-colors`}

@@ -65,10 +65,6 @@ const Dashboard = () => {
 
   return (
     <div className="flex flex-col gap-4 sm:gap-6 lg:gap-8">
-      <div className="mb-2">
-        <h1 className={`text-xl lg:text-2xl font-semibold ${textPrimary} mb-1`}>Welcome back, <span className="text-indigo-600">Amit</span></h1>
-        <p className={`text-sm lg:text-base ${textSecondary}`}>Your AI-powered payment dashboard</p>
-      </div>
       <div className={`w-full min-h-screen max-w-6xl mx-auto flex flex-col gap-4 sm:gap-6 lg:gap-8 ${mainBg} pt-4 sm:pt-6 lg:pt-8 px-4 sm:px-6 lg:px-0`}>
         {/* Quick Actions & Consumer Services */}
         <div className="flex flex-col lg:flex-row gap-4 sm:gap-6">

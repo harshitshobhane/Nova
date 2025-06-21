@@ -97,6 +97,15 @@ const QRCodePage = () => {
   
   const qrRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const qrCodeInstance = useRef<QRCodeStyling | null>(null);
+
+  // Effect to clear selection when form is used
+  useEffect(() => {
+    const isFormDirty = upiId || label;
+    if (isFormDirty && selectedQR) {
+      setSelectedQR(null);
+    }
+  }, [upiId, label, selectedQR]);
 
   const [qrCodes, setQrCodes] = useState<QRCode[]>(() => {
     try {
@@ -132,50 +141,46 @@ const QRCodePage = () => {
     return `upi://pay?${params.toString()}`;
   }, [previewData]);
 
-  const qrCode = useMemo(() => new QRCodeStyling({
-    width: 256,
-    height: 256,
-    type: 'svg',
-    data: upiStringForPreview || undefined,
-    image: previewData?.logo || undefined,
-    dotsOptions: {
-      color: previewData?.color || '#000000',
-      type: previewData?.dotStyle || 'square',
-    },
-    cornersSquareOptions: {
-      type: previewData?.cornerStyle || 'square',
-      color: previewData?.color || '#000000',
-    },
-    imageOptions: {
-      hideBackgroundDots: true,
-      imageSize: 0.4,
-      margin: 4,
-    },
-  }), [previewData, upiStringForPreview]);
+  useEffect(() => {
+    if (!qrCodeInstance.current) {
+      qrCodeInstance.current = new QRCodeStyling({
+        width: 256,
+        height: 256,
+        type: 'svg',
+        imageOptions: { hideBackgroundDots: true, imageSize: 0.4, margin: 4 },
+      });
+    }
+
+    const qrCode = qrCodeInstance.current;
+    const container = document.getElementById('mobile-qr-ref') || qrRef.current;
+
+    if (!container) return;
+
+    if (previewData && upiStringForPreview) {
+      qrCode.update({
+        data: upiStringForPreview,
+        image: previewData.logo || undefined,
+        dotsOptions: {
+          color: previewData.color || '#000000',
+          type: previewData.dotStyle || 'square',
+        },
+        cornersSquareOptions: {
+          type: previewData.cornerStyle || 'square',
+          color: previewData.color || '#000000',
+        },
+      });
+      if (container.firstChild) {
+        container.innerHTML = '';
+      }
+      qrCode.append(container);
+    } else {
+      container.innerHTML = '';
+    }
+  }, [previewData, upiStringForPreview]);
 
   useEffect(() => {
     localStorage.setItem('qrCodes', JSON.stringify(qrCodes));
   }, [qrCodes]);
-
-  useEffect(() => {
-    if (!previewData || !qrCode) return;
-    
-    qrCode.update({ data: upiStringForPreview });
-
-    const qrElDesktop = qrRef.current;
-    const qrElMobile = document.getElementById('mobile-qr-ref');
-    
-    // Always clear both to handle responsive switching
-    if (qrElDesktop) qrElDesktop.innerHTML = '';
-    if (qrElMobile) qrElMobile.innerHTML = '';
-    
-    // Append to the correct one. The mobile one is only present in the DOM on small screens.
-    if (qrElMobile) {
-      qrCode.append(qrElMobile);
-    } else if (qrElDesktop) {
-      qrCode.append(qrElDesktop);
-    }
-  }, [qrCode, previewData, upiStringForPreview]);
 
   const handleLogoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -190,16 +195,16 @@ const QRCodePage = () => {
   };
 
   const handleDownload = async (format: 'png' | 'svg') => {
-    if (!previewData) return;
+    if (!previewData || !qrCodeInstance.current) return;
     const filename = `${previewData.label.replace(/\s+/g, '-') || 'qrcode'}`;
-    qrCode.download({ name: filename, extension: format });
+    qrCodeInstance.current.download({ name: filename, extension: format });
     toast.success(t("toasts.downloadSuccess", { format: format.toUpperCase() }));
   };
 
   const handleShare = async () => {
-    if (!previewData) return;
+    if (!previewData || !qrCodeInstance.current) return;
     try {
-      const rawData = await qrCode.getRawData('png');
+      const rawData = await qrCodeInstance.current.getRawData('png');
       if (!rawData) throw new Error("Could not generate QR code data.");
       
       const blob = rawData instanceof Blob ? rawData : new Blob([rawData], { type: 'image/png' });
