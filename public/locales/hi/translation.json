@@ -32,7 +32,11 @@
     "downloadPng": "पीएनजी",
     "downloadSvg": "एसवीजी",
     "share": "शेयर करें",
-    "copyLink": "लिंक कॉपी करें"
+    "copyLink": "लिंक कॉपी करें",
+    "dotStyle": "डॉट स्टाइल",
+    "cornerStyle": "कॉर्नर स्टाइल",
+    "dotStylePlaceholder": "डॉट स्टाइल चुनें",
+    "cornerStylePlaceholder": "कॉर्नर स्टाइल चुनें"
   },
   "toasts": {
     "logoAdded": "लोगो जोड़ा गया।",

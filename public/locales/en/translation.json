@@ -32,7 +32,11 @@
     "downloadPng": "PNG",
     "downloadSvg": "SVG",
     "share": "Share",
-    "copyLink": "Copy Link"
+    "copyLink": "Copy Link",
+    "dotStyle": "Dot Style",
+    "cornerStyle": "Corner Style",
+    "dotStylePlaceholder": "Select dot style",
+    "cornerStylePlaceholder": "Select corner style"
   },
   "toasts": {
     "logoAdded": "Logo added.",

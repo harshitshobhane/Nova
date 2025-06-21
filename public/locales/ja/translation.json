@@ -32,7 +32,11 @@
     "downloadPng": "PNG",
     "downloadSvg": "SVG",
     "share": "共有",
-    "copyLink": "リンクをコピー"
+    "copyLink": "リンクをコピー",
+    "dotStyle": "ドットのスタイル",
+    "cornerStyle": "コーナーのスタイル",
+    "dotStylePlaceholder": "ドットのスタイルを選択",
+    "cornerStylePlaceholder": "コーナーのスタイルを選択"
   },
   "toasts": {
     "logoAdded": "ロゴが追加されました。",
