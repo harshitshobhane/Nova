@@ -14,7 +14,6 @@ import { supportedLngs } from '../i18n';
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import QRCodeStyling, { DotType, CornerSquareType } from 'qr-code-styling';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 interface QRCode {
   id: number;
@@ -97,15 +96,6 @@ const QRCodePage = () => {
   
   const qrRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const qrCodeInstance = useRef<QRCodeStyling | null>(null);
-
-  // Effect to clear selection when form is used
-  useEffect(() => {
-    const isFormDirty = upiId || label;
-    if (isFormDirty && selectedQR) {
-      setSelectedQR(null);
-    }
-  }, [upiId, label, selectedQR]);
 
   const [qrCodes, setQrCodes] = useState<QRCode[]>(() => {
     try {
@@ -141,46 +131,40 @@ const QRCodePage = () => {
     return `upi://pay?${params.toString()}`;
   }, [previewData]);
 
-  useEffect(() => {
-    if (!qrCodeInstance.current) {
-      qrCodeInstance.current = new QRCodeStyling({
-        width: 256,
-        height: 256,
-        type: 'svg',
-        imageOptions: { hideBackgroundDots: true, imageSize: 0.4, margin: 4 },
-      });
-    }
-
-    const qrCode = qrCodeInstance.current;
-    const container = document.getElementById('mobile-qr-ref') || qrRef.current;
-
-    if (!container) return;
-
-    if (previewData && upiStringForPreview) {
-      qrCode.update({
-        data: upiStringForPreview,
-        image: previewData.logo || undefined,
-        dotsOptions: {
-          color: previewData.color || '#000000',
-          type: previewData.dotStyle || 'square',
-        },
-        cornersSquareOptions: {
-          type: previewData.cornerStyle || 'square',
-          color: previewData.color || '#000000',
-        },
-      });
-      if (container.firstChild) {
-        container.innerHTML = '';
-      }
-      qrCode.append(container);
-    } else {
-      container.innerHTML = '';
-    }
-  }, [previewData, upiStringForPreview]);
+  const qrCode = useMemo(() => new QRCodeStyling({
+    width: 256,
+    height: 256,
+    type: 'svg',
+    data: upiStringForPreview || undefined,
+    image: previewData?.logo || undefined,
+    dotsOptions: {
+      color: previewData?.color || '#000000',
+      type: previewData?.dotStyle || 'square',
+    },
+    cornersSquareOptions: {
+      type: previewData?.cornerStyle || 'square',
+      color: previewData?.color || '#000000',
+    },
+    imageOptions: {
+      hideBackgroundDots: true,
+      imageSize: 0.4,
+      margin: 4,
+    },
+  }), [previewData, upiStringForPreview]);
 
   useEffect(() => {
     localStorage.setItem('qrCodes', JSON.stringify(qrCodes));
-  }, [qrCodes]);
+    if (previewData) {
+      qrCode.update({ data: upiStringForPreview });
+    }
+  }, [qrCodes, upiStringForPreview, previewData, qrCode]);
+  
+  useEffect(() => {
+    if (qrRef.current) {
+      qrRef.current.innerHTML = '';
+      qrCode.append(qrRef.current);
+    }
+  }, [qrCode]);
 
   const handleLogoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -195,16 +179,16 @@ const QRCodePage = () => {
   };
 
   const handleDownload = async (format: 'png' | 'svg') => {
-    if (!previewData || !qrCodeInstance.current) return;
+    if (!previewData) return;
     const filename = `${previewData.label.replace(/\s+/g, '-') || 'qrcode'}`;
-    qrCodeInstance.current.download({ name: filename, extension: format });
+    qrCode.download({ name: filename, extension: format });
     toast.success(t("toasts.downloadSuccess", { format: format.toUpperCase() }));
   };
 
   const handleShare = async () => {
-    if (!previewData || !qrCodeInstance.current) return;
+    if (!previewData) return;
     try {
-      const rawData = await qrCodeInstance.current.getRawData('png');
+      const rawData = await qrCode.getRawData('png');
       if (!rawData) throw new Error("Could not generate QR code data.");
       
       const blob = rawData instanceof Blob ? rawData : new Blob([rawData], { type: 'image/png' });
@@ -324,27 +308,25 @@ const QRCodePage = () => {
   const isFormValid = upiId && label;
 
   const { theme } = useOutletContext<{ theme: 'light' | 'dark' }>();
-  // --- UI & Theme Improvement ---
-  const mainBg = theme === 'dark' ? 'bg-slate-900' : 'bg-gray-50';
-  const cardBg = theme === 'dark' ? 'bg-slate-800/40 backdrop-blur-sm' : 'bg-white/70 backdrop-blur-lg';
-  const border = theme === 'dark' ? 'border-slate-700/80' : 'border-slate-200';
-  const textPrimary = theme === 'dark' ? 'text-slate-100' : 'text-slate-800';
-  const textSecondary = theme === 'dark' ? 'text-slate-400' : 'text-slate-500';
-  const inputBg = theme === 'dark' ? 'bg-slate-800/50 placeholder:text-slate-500' : 'bg-white/80 placeholder:text-slate-400';
-  const placeholderBg = theme === 'dark' ? 'bg-slate-800' : 'bg-slate-200';
-  const listBg = theme === 'dark' ? 'bg-slate-800/60' : 'bg-white/80';
-  const listHoverBg = theme === 'dark' ? 'hover:bg-slate-700/60' : 'hover:bg-gray-100';
-  const selectedBg = theme === 'dark' ? 'bg-indigo-500/30' : 'bg-indigo-100';
+  // Theme-based variables
+  const mainBg = ''; // No outer background
+  const cardBg = theme === 'dark' ? 'bg-white/10 backdrop-blur-sm' : 'bg-white/80 backdrop-blur-lg';
+  const border = theme === 'dark' ? 'border-slate-700' : 'border-slate-200';
+  const textPrimary = theme === 'dark' ? 'text-white' : 'text-[#23263a]';
+  const textSecondary = theme === 'dark' ? 'text-gray-400' : 'text-gray-600';
+  const inputBg = theme === 'dark' ? 'bg-slate-700 text-slate-100 placeholder-slate-400' : 'bg-white text-gray-800 placeholder-gray-400';
+  const placeholderBg = theme === 'dark' ? 'bg-slate-700' : 'bg-slate-200';
+  // Additional derived styles
+  const listBg = theme === 'dark' ? 'bg-slate-800' : 'bg-white';
+  const listHoverBg = theme === 'dark' ? 'hover:bg-slate-700/50' : 'hover:bg-gray-100';
+  const selectedBg = theme === 'dark' ? 'bg-indigo-900/50' : 'bg-indigo-100';
   const secondaryButton = theme === 'dark'
     ? 'bg-slate-700 hover:bg-slate-600 text-slate-200'
-    : 'bg-slate-200 hover:bg-slate-300 text-slate-700';
+    : 'bg-gray-200 hover:bg-gray-300 text-gray-700';
   const previewButton = theme === 'dark'
-    ? 'bg-slate-700/80 border-slate-600/80 hover:bg-slate-700 text-slate-200'
-    : 'bg-white/80 border-slate-200 hover:bg-slate-100 text-slate-800';
-  const fileButton = theme === 'dark' 
-    ? 'bg-slate-700 border-slate-600 text-slate-200 hover:bg-slate-600' 
-    : 'bg-white border-slate-200 text-indigo-600 hover:bg-slate-100';
-  // --- End of UI & Theme Improvement ---
+    ? 'bg-slate-700 border-slate-600 hover:bg-slate-600 text-slate-200'
+    : 'bg-white border-slate-200 hover:bg-slate-100 text-slate-800';
+  const fileButton = theme === 'dark' ? 'bg-[#23263a] border-gray-700 text-slate-200 hover:bg-[#181c2a] hover:text-white' : 'bg-white border-[#ececf6] text-[#7c3aed] hover:bg-[#f3f4f6] hover:text-[#23263a]';
 
   return (
     <div className={`p-4 md:p-8 grid grid-cols-1 lg:grid-cols-3 gap-8 max-w-7xl mx-auto ${mainBg} ${textPrimary}`}>
@@ -453,7 +435,7 @@ const QRCodePage = () => {
             </div>
             {logoImage && (
               <div className="flex items-center gap-2 mt-1">
-                <img src={logoImage} alt="Logo preview" className={`w-8 h-8 rounded object-contain border ${theme === 'dark' ? 'bg-slate-800 border-slate-700' : 'bg-gray-100 border-gray-300'}`} />
+                <img src={logoImage} alt="Logo preview" className={`w-8 h-8 rounded object-contain border ${theme === 'dark' ? 'bg-slate-700 border-slate-600' : 'bg-gray-100 border-gray-300'}`} />
                 <span className="text-xs text-slate-400 truncate max-w-[120px]">{t("qrCodePage.logoSelected")}</span>
               </div>
             )}
@@ -475,9 +457,8 @@ const QRCodePage = () => {
         </div>
       </div>
       
-      {/* --- Desktop Layout --- */}
       {/* Middle Column: List */}
-      <div className={`hidden lg:block lg:col-span-1 space-y-4`}>
+      <div className={`lg:col-span-1 space-y-4`}>
         <div className={`${cardBg} p-6 rounded-lg border ${border}`}>
           <h2 className={`text-xl font-bold mb-4 ${textPrimary} flex items-center`}><QrCode className="mr-2" />{t("qrCodePage.myQRCodesTitle")}</h2>
           <div className="relative mb-4">
@@ -488,7 +469,7 @@ const QRCodePage = () => {
             {filteredQRCodes.length > 0 ? filteredQRCodes.map(qr => (
               <div key={qr.id} onClick={() => { resetForm(); setSelectedQR(qr); }} className={`p-3 rounded-lg flex items-center justify-between cursor-pointer transition-all border ${selectedQR?.id === qr.id ? `${selectedBg} border-indigo-500` : `border-transparent ${listBg} ${listHoverBg}`}`}>
                 <div className="flex items-center gap-3 overflow-hidden">
-                  <div className="flex items-center justify-center min-w-[40px] h-[40px] rounded overflow-hidden bg-white">
+                  <div className="flex items-center justify-center min-w-[40px] h-[40px] rounded overflow-hidden">
                     <QRCodeSVG value={buildUpiString(qr)} size={40} bgColor="transparent" fgColor={qr.color} />
                   </div>
                   <div className='truncate'>
@@ -507,7 +488,7 @@ const QRCodePage = () => {
       </div>
 
       {/* Right Column: Preview */}
-      <div className="hidden lg:block lg:col-span-1">
+      <div className="lg:col-span-1">
         <Card className={`${cardBg} border ${border} sticky top-24`}>
           <CardHeader>
             <h2 className={`text-xl font-bold ${textPrimary}`}>{t("qrCodePage.previewTitle")}</h2>
@@ -524,7 +505,7 @@ const QRCodePage = () => {
                 <div className="w-full grid grid-cols-2 gap-3 pt-2">
                   <Button onClick={() => handleDownload('png')} variant="outline" className={`w-full ${previewButton}`}><Download className="mr-2 h-4 w-4"/>{t("qrCodePage.downloadPng")}</Button>
                   <Button onClick={() => handleDownload('svg')} variant="outline" className={`w-full ${previewButton}`}><Download className="mr-2 h-4 w-4"/>{t("qrCodePage.downloadSvg")}</Button>
-                </div>
+              </div>
                 {navigator.share && (
                   <Button onClick={handleShare} variant="outline" className={`w-full col-span-2 ${previewButton}`}>
                     <Share2 className="mr-2 h-4 w-4" />{t("qrCodePage.share")}
@@ -544,79 +525,6 @@ const QRCodePage = () => {
           </CardContent>
         </Card>
       </div>
-      {/* --- End Desktop Layout --- */}
-
-      {/* --- Mobile Layout --- */}
-      <div className="lg:hidden col-span-1 space-y-4">
-        <Tabs defaultValue="preview" className="w-full">
-          <TabsList className={`grid w-full grid-cols-2 ${theme === 'dark' ? 'bg-slate-800' : 'bg-gray-200'}`}>
-            <TabsTrigger value="preview" className={`${theme === 'dark' ? 'text-slate-400 data-[state=active]:bg-slate-700/80 data-[state=active]:text-slate-50' : 'text-slate-600 data-[state=active]:bg-white data-[state=active]:text-indigo-600'}`}>{t("qrCodePage.previewTitle")}</TabsTrigger>
-            <TabsTrigger value="list" className={`${theme === 'dark' ? 'text-slate-400 data-[state=active]:bg-slate-700/80 data-[state=active]:text-slate-50' : 'text-slate-600 data-[state=active]:bg-white data-[state=active]:text-indigo-600'}`}>{t("qrCodePage.myQRCodesTitle")}</TabsTrigger>
-          </TabsList>
-          <TabsContent value="preview">
-             <Card className={`${cardBg} border ${border} mt-4`}>
-              <CardContent className="p-6 flex flex-col items-center justify-center space-y-4">
-                {previewData ? (
-                  <>
-                    <div id="mobile-qr-ref" className="p-4 bg-white rounded-lg inline-block" />
-                     <div className="text-center">
-                      <p className={`font-bold text-lg ${textPrimary}`}>{previewData.label}</p>
-                      {previewData.type === 'Fixed' && previewData.amount && <p className={`${textSecondary}`}>Amount: ₹{previewData.amount}</p>}
-                      <p className={`text-xs ${textSecondary} break-all`}>{previewData.upiId}</p>
-                    </div>
-                    <div className="w-full grid grid-cols-2 gap-3 pt-2">
-                      <Button onClick={() => handleDownload('png')} variant="outline" className={`w-full ${previewButton}`}><Download className="mr-2 h-4 w-4"/>{t("qrCodePage.downloadPng")}</Button>
-                      <Button onClick={() => handleDownload('svg')} variant="outline" className={`w-full ${previewButton}`}><Download className="mr-2 h-4 w-4"/>{t("qrCodePage.downloadSvg")}</Button>
-                  </div>
-                    {navigator.share && (
-                      <Button onClick={handleShare} variant="outline" className={`w-full col-span-2 ${previewButton}`}>
-                        <Share2 className="mr-2 h-4 w-4" />{t("qrCodePage.share")}
-                      </Button>
-                    )}
-                    <Button onClick={handleCopyLink} variant="outline" className={`w-full col-span-2 ${previewButton}`}>
-                      <Copy className="mr-2 h-4 w-4" />{t("qrCodePage.copyLink")}
-                    </Button>
-                  </>
-                ) : (
-                  <div className="h-[400px] flex flex-col items-center justify-center text-center animate-pulse">
-                      <div className={`w-64 h-64 ${placeholderBg} rounded-lg`}></div>
-                      <div className={`w-48 h-6 ${placeholderBg} rounded-md mt-4`}></div>
-                      <div className={`w-32 h-4 ${placeholderBg} rounded-md mt-2`}></div>
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-          </TabsContent>
-          <TabsContent value="list">
-            <div className={`${cardBg} p-6 rounded-lg border ${border} mt-4`}>
-              <div className="relative mb-4">
-                <Search className={`absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 ${textSecondary}`} />
-                <Input placeholder={t("qrCodePage.searchPlaceholder")} value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className={`${inputBg} ${border} pl-10 rounded-md`} />
-              </div>
-              <div className="space-y-3 max-h-[28rem] overflow-y-auto pr-1">
-                {filteredQRCodes.length > 0 ? filteredQRCodes.map(qr => (
-                  <div key={qr.id} onClick={() => { resetForm(); setSelectedQR(qr); }} className={`p-3 rounded-lg flex items-center justify-between cursor-pointer transition-all border ${selectedQR?.id === qr.id ? `${selectedBg} border-indigo-500` : `border-transparent ${listBg} ${listHoverBg}`}`}>
-                    <div className="flex items-center gap-3 overflow-hidden">
-                      <div className="flex items-center justify-center min-w-[40px] h-[40px] rounded overflow-hidden bg-white">
-                        <QRCodeSVG value={buildUpiString(qr)} size={40} bgColor="transparent" fgColor={qr.color} />
-                      </div>
-                      <div className='truncate'>
-                        <p className={`${textPrimary} font-semibold truncate`}>{qr.label}</p>
-                        <p className={`${textSecondary} text-sm`}>{qr.type}{qr.type === 'Fixed' && qr.amount ? `: ₹${qr.amount}` : ''}</p>
-                      </div>
-                    </div>
-                    <div className="flex items-center space-x-1 flex-shrink-0">
-                      <button onClick={(e) => { e.stopPropagation(); handleEdit(qr); }} className="p-2 -m-1 rounded-full hover:bg-blue-500/20" aria-label={t("qrCodePage.editAriaLabel")}><Pencil size={16} className="text-blue-500" /></button>
-                      <button onClick={(e) => { e.stopPropagation(); handleDelete(qr.id); }} className="p-2 -m-1 rounded-full hover:bg-red-500/20" aria-label={t("qrCodePage.deleteAriaLabel")}><Trash2 size={16} className="text-red-500" /></button>
-                    </div>
-                  </div>
-                )) : <p className={textSecondary}>{searchQuery ? t("qrCodePage.noCodesFound") : t("qrCodePage.noSavedCodes")}</p>}
-              </div>
-            </div>
-          </TabsContent>
-        </Tabs>
-      </div>
-      {/* --- End Mobile Layout --- */}
     </div>
   );
 };
