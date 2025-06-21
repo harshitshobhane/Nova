@@ -68,13 +68,13 @@ const Hero: React.FC<HeroProps> = ({ theme, onThemeToggle }) => {
           <a href="#pricing" data-scroll className={`nav-link ${navText}`}>Pricing</a>
           <a href="#testimonials" data-scroll className={`nav-link ${navText}`}>Testimonials</a>
             <a
-              onClick={e => { e.preventDefault(); navigate('/dashboard'); }}
-              href="/dashboard"
+              onClick={e => { e.preventDefault(); navigate('/dashboard/qr'); }}
+              href="/dashboard/qr"
               className="ml-2 px-5 py-2 rounded-full bg-white border border-gray-300 text-gray-900 font-semibold shadow-sm hover:bg-gray-50 hover:border-orange-400 hover:shadow-lg hover:scale-105 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-orange-400 active:scale-95 cursor-pointer"
               tabIndex={0}
               role="button"
             >
-              Dashboard
+              Free Trial
             </a>
           </div>
         {/* Mobile Hamburger */}
