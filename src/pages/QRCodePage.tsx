@@ -14,6 +14,9 @@ import { supportedLngs } from '../i18n';
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import QRCodeStyling, { DotType, CornerSquareType } from 'qr-code-styling';
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
+import { motion, AnimatePresence } from 'framer-motion';
 
 interface QRCode {
   id: number;
@@ -25,6 +28,8 @@ interface QRCode {
   logo?: string; // Stored as a base64 data URL
   dotStyle?: DotType;
   cornerStyle?: CornerSquareType;
+  scanCount?: number;
+  displayText?: string;
 }
 
 const LanguageSwitcher = () => {
@@ -87,6 +92,8 @@ const QRCodePage = () => {
   const [logoImage, setLogoImage] = useState<string | null>(null);
   const [dotStyle, setDotStyle] = useState<DotType>('square');
   const [cornerStyle, setCornerStyle] = useState<CornerSquareType>('square');
+  const [upiIdError, setUpiIdError] = useState<string | null>(null);
+  const [displayText, setDisplayText] = useState('');
   
   // App logic state
   const [editingQR, setEditingQR] = useState<QRCode | null>(null);
@@ -95,6 +102,7 @@ const QRCodePage = () => {
   const [searchQuery, setSearchQuery] = useState('');
   
   const qrRef = useRef<HTMLDivElement>(null);
+  const qrRefContainer = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [qrCodes, setQrCodes] = useState<QRCode[]>(() => {
@@ -108,15 +116,15 @@ const QRCodePage = () => {
   });
 
   const previewData = useMemo(() => {
-    const formIsActive = label || upiId;
+    const formIsActive = label || upiId || displayText;
     if (formIsActive) {
-      return { id: 0, label, upiId, type, amount, color: qrColor, logo: logoImage, dotStyle, cornerStyle };
+      return { id: 0, label, upiId, type, amount, color: qrColor, logo: logoImage, dotStyle, cornerStyle, displayText };
     }
     if (selectedQR) {
       return selectedQR;
     }
     return null;
-  }, [label, upiId, type, amount, qrColor, logoImage, dotStyle, cornerStyle, selectedQR]);
+  }, [label, upiId, type, amount, qrColor, logoImage, dotStyle, cornerStyle, selectedQR, displayText]);
 
   const upiStringForPreview = useMemo(() => {
     if (!previewData) return '';
@@ -131,12 +139,31 @@ const QRCodePage = () => {
     return `upi://pay?${params.toString()}`;
   }, [previewData]);
 
+  const validateUpiId = (id: string) => {
+    const upiRegex = /^[a-zA-Z0-9.\-_]{2,256}@[a-zA-Z]{2,64}$/;
+    if (!id) {
+      setUpiIdError(null);
+      return;
+    }
+    if (!upiRegex.test(id)) {
+      setUpiIdError('Invalid UPI ID format. Should be like name@bank.');
+    } else {
+      setUpiIdError(null);
+    }
+  };
+
+  const handleUpiIdChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newUpiId = e.target.value;
+    setUpiId(newUpiId);
+    validateUpiId(newUpiId);
+  };
+
   const qrCode = useMemo(() => new QRCodeStyling({
     width: 256,
     height: 256,
     type: 'svg',
     data: upiStringForPreview || undefined,
-    image: previewData?.logo || undefined,
+    image: undefined, // Logo is now displayed outside
     dotsOptions: {
       color: previewData?.color || '#000000',
       type: previewData?.dotStyle || 'square',
@@ -233,9 +260,26 @@ const QRCodePage = () => {
     setDotStyle('square');
     setCornerStyle('square');
     setSelectedQR(null);
+    setUpiIdError(null);
+    setDisplayText('');
   }
 
+  const handleSelectQR = (qr: QRCode) => {
+    resetForm();
+    setSelectedQR(qr);
+
+    // Increment scan count
+    const updatedQRs = qrCodes.map(q =>
+      q.id === qr.id ? { ...q, scanCount: (q.scanCount || 0) + 1 } : q
+    );
+    setQrCodes(updatedQRs);
+  };
+
   const handleSaveOrUpdate = () => {
+    if (upiIdError) {
+      toast.error(upiIdError);
+      return;
+    }
     if (!upiId || !label) {
       toast.error(t("toasts.requiredFields"));
       return;
@@ -249,6 +293,8 @@ const QRCodePage = () => {
       logo: logoImage,
       dotStyle: dotStyle,
       cornerStyle: cornerStyle,
+      scanCount: editingQR ? editingQR.scanCount : 0,
+      displayText: displayText,
     };
     const updatedQRs = editingQR
       ? qrCodes.map(qr => qr.id === editingQR.id ? newQRCodeData : qr)
@@ -279,6 +325,7 @@ const QRCodePage = () => {
     setEditingQR(qr);
     setLabel(qr.label);
     setUpiId(qr.upiId);
+    validateUpiId(qr.upiId);
     setType(qr.type);
     setAmount(qr.amount);
     setQrColor(qr.color);
@@ -286,6 +333,8 @@ const QRCodePage = () => {
     setDotStyle(qr.dotStyle || 'square');
     setCornerStyle(qr.cornerStyle || 'square');
     setSelectedQR(null);
+    setUpiIdError(null);
+    setDisplayText(qr.displayText || '');
   }
   
   const filteredQRCodes = qrCodes.filter(qr =>
@@ -328,6 +377,65 @@ const QRCodePage = () => {
     : 'bg-white border-slate-200 hover:bg-slate-100 text-slate-800';
   const fileButton = theme === 'dark' ? 'bg-[#23263a] border-gray-700 text-slate-200 hover:bg-[#181c2a] hover:text-white' : 'bg-white border-[#ececf6] text-[#7c3aed] hover:bg-[#f3f4f6] hover:text-[#23263a]';
 
+  const handleDownloadPDF = async () => {
+    if (!qrRefContainer.current || !previewData) {
+      toast.error(t("toasts.pdfError"));
+      return;
+    }
+    
+    toast.info(t("toasts.generatingPdf"));
+
+    try {
+      const canvas = await html2canvas(qrRefContainer.current, {
+        scale: 3, // Higher scale for better quality
+        backgroundColor: null, // Use element's background
+      });
+      
+      const imgData = canvas.toDataURL('image/png');
+      
+      const pdf = new jsPDF({
+        orientation: 'portrait',
+        unit: 'px',
+        format: [canvas.width + 80, canvas.height + 120] // format based on content
+      });
+
+      // Header
+      pdf.setFontSize(24);
+      pdf.setFont('helvetica', 'bold');
+      pdf.text('NovaPay', 40, 40);
+      pdf.setFontSize(16);
+      pdf.setFont('helvetica', 'normal');
+      pdf.text(previewData.label, 40, 60);
+      
+      // QR Code Image
+      pdf.addImage(imgData, 'PNG', 40, 80, canvas.width, canvas.height);
+      
+      // Footer
+      pdf.setFontSize(12);
+      pdf.setTextColor(100);
+      pdf.text(`UPI ID: ${previewData.upiId}`, 40, canvas.height + 100);
+      
+      const filename = `${previewData.label.replace(/\s+/g, '-') || 'qrcode'}-poster.pdf`;
+      pdf.save(filename);
+      
+      toast.success(t("toasts.pdfSuccess"));
+    } catch (error) {
+      console.error("PDF generation failed:", error);
+      toast.error(t("toasts.pdfError"));
+    }
+  };
+
+  const handleCopyUpiId = async (e: React.MouseEvent, upiId: string) => {
+    e.stopPropagation(); // Prevent card selection
+    try {
+      await navigator.clipboard.writeText(upiId);
+      toast.success(t('toasts.upiIdCopied'));
+    } catch (err) {
+      console.error('Copy failed:', err);
+      toast.error(t('toasts.copyFailed'));
+    }
+  };
+
   return (
     <div className={`p-4 md:p-8 grid grid-cols-1 lg:grid-cols-3 gap-8 max-w-7xl mx-auto ${mainBg} ${textPrimary}`}>
       {/* Left Column: Form */}
@@ -339,13 +447,14 @@ const QRCodePage = () => {
         
         <div className="space-y-2">
           <Label htmlFor="upiId" className={textSecondary}>{t("qrCodePage.upiIdLabel")}</Label>
-          <Input id="upiId" name="upiId" value={upiId} onChange={e => setUpiId(e.target.value)} placeholder={t("qrCodePage.upiIdPlaceholder")} className={`${inputBg} ${border}`} />
+          <Input id="upiId" name="upiId" value={upiId} onChange={handleUpiIdChange} placeholder={t("qrCodePage.upiIdPlaceholder")} className={`${inputBg} ${border} ${upiIdError ? 'border-red-500' : ''}`} />
+          {upiIdError && <p className="text-red-500 text-xs mt-1">{upiIdError}</p>}
         </div>
 
         <div className="space-y-2">
           <Label htmlFor="label" className={textSecondary}>{t("qrCodePage.nameLabel")}</Label>
           <Input id="label" name="label" value={label} onChange={e => setLabel(e.target.value)} placeholder={t("qrCodePage.namePlaceholder")} className={`${inputBg} ${border}`} />
-              </div>
+        </div>
 
         <div className="space-y-2">
            <Label className={textSecondary}>{t("qrCodePage.paymentTypeLabel")}</Label>
@@ -372,8 +481,8 @@ const QRCodePage = () => {
           <div className="flex items-center gap-2">
             <Input id="qrColor" type="color" value={qrColor} onChange={e => setQrColor(e.target.value)} className={`${inputBg} ${border} p-1 h-10 w-14 cursor-pointer`} />
             <Input value={qrColor} onChange={e => setQrColor(e.target.value)} placeholder="#000000" className={`${inputBg} ${border} w-full`} />
-              </div>
-            </div>
+          </div>
+        </div>
 
         <div className="grid grid-cols-2 gap-4">
           <div className="space-y-2">
@@ -402,12 +511,12 @@ const QRCodePage = () => {
               </SelectContent>
             </Select>
           </div>
-              </div>
+        </div>
 
         <div className="space-y-2">
           <Label className={textSecondary}>{t("qrCodePage.logoLabel")}</Label>
           <div className="flex flex-col gap-2">
-                <input
+            <input
               id="logo"
               ref={fileInputRef}
               type="file"
@@ -442,6 +551,11 @@ const QRCodePage = () => {
           </div>
         </div>
 
+        <div className="space-y-2">
+          <Label htmlFor="displayText" className={textSecondary}>{t("qrCodePage.displayTextLabel")}</Label>
+          <Input id="displayText" name="displayText" value={displayText} onChange={e => setDisplayText(e.target.value)} placeholder={t("qrCodePage.displayTextPlaceholder")} className={`${inputBg} ${border}`} />
+        </div>
+
         <div className="flex flex-col sm:flex-row gap-3">
           <Button onClick={handleSaveOrUpdate} disabled={!isFormValid || saveState === 'saving'} className="w-full transition-all duration-200 bg-indigo-600 hover:bg-indigo-700 text-white">
             {saveState === 'saving' ? t("qrCodePage.savingButton") :
@@ -466,62 +580,106 @@ const QRCodePage = () => {
             <Input placeholder={t("qrCodePage.searchPlaceholder")} value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className={`${inputBg} ${border} pl-10 rounded-md`} />
           </div>
           <div className="space-y-3 max-h-[28rem] overflow-y-auto pr-1">
-            {filteredQRCodes.length > 0 ? filteredQRCodes.map(qr => (
-              <div key={qr.id} onClick={() => { resetForm(); setSelectedQR(qr); }} className={`p-3 rounded-lg flex items-center justify-between cursor-pointer transition-all border ${selectedQR?.id === qr.id ? `${selectedBg} border-indigo-500` : `border-transparent ${listBg} ${listHoverBg}`}`}>
-                <div className="flex items-center gap-3 overflow-hidden">
-                  <div className="flex items-center justify-center min-w-[40px] h-[40px] rounded overflow-hidden">
-                    <QRCodeSVG value={buildUpiString(qr)} size={40} bgColor="transparent" fgColor={qr.color} />
+            <AnimatePresence>
+              {filteredQRCodes.length > 0 ? filteredQRCodes.map((qr, index) => (
+                <motion.div
+                  key={qr.id}
+                  layout
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                  transition={{ duration: 0.2, delay: index * 0.05 }}
+                  onClick={() => handleSelectQR(qr)} 
+                  className={`p-3 rounded-lg flex items-center justify-between cursor-pointer transition-all border ${selectedQR?.id === qr.id ? `${selectedBg} border-indigo-500` : `border-transparent ${listBg} ${listHoverBg}`}`}
+                >
+                  <div className="flex items-center gap-3 overflow-hidden">
+                    <div className="flex items-center justify-center min-w-[40px] h-[40px] rounded overflow-hidden">
+                      <QRCodeSVG value={buildUpiString(qr)} size={40} bgColor="transparent" fgColor={theme === 'dark' ? qr.color === '#000000' ? '#ffffff' : qr.color : qr.color } />
+                    </div>
+                    <div className='truncate'>
+                      <p className={`${textPrimary} font-semibold truncate`}>{qr.label}</p>
+                      <p className={`${textSecondary} text-sm truncate`}>{qr.upiId}</p>
+                    </div>
                   </div>
-                  <div className='truncate'>
-                    <p className={`${textPrimary} font-semibold truncate`}>{qr.label}</p>
-                    <p className={`${textSecondary} text-sm`}>{qr.type}{qr.type === 'Fixed' && qr.amount ? `: ₹${qr.amount}` : ''}</p>
+                  <div className="flex items-center gap-2 flex-shrink-0">
+                    <div className="text-right">
+                      <p className={`text-xs ${textSecondary}`}>{t('qrCodePage.scans')}</p>
+                      <p className={`font-bold ${textPrimary}`}>{qr.scanCount || 0}</p>
+                    </div>
+                    <motion.div whileHover={{ scale: 1.1 }} className="flex items-center">
+                      <Button size="icon" variant="ghost" className="h-8 w-8" onClick={(e) => handleCopyUpiId(e, qr.upiId)}>
+                        <Copy className="h-4 w-4" />
+                      </Button>
+                      <Button size="icon" variant="ghost" className="h-8 w-8" onClick={(e) => { e.stopPropagation(); handleEdit(qr); }}>
+                        <Pencil className="h-4 w-4" />
+                      </Button>
+                      <Button size="icon" variant="ghost" className="h-8 w-8" onClick={(e) => { e.stopPropagation(); handleDelete(qr.id); }}>
+                        <Trash2 className="h-4 w-4 text-red-500" />
+                      </Button>
+                    </motion.div>
                   </div>
-            </div>
-                <div className="flex items-center space-x-1 flex-shrink-0">
-                  <button onClick={(e) => { e.stopPropagation(); handleEdit(qr); }} className="p-2 -m-1 rounded-full hover:bg-blue-500/20" aria-label={t("qrCodePage.editAriaLabel")}><Pencil size={16} className="text-blue-500" /></button>
-                  <button onClick={(e) => { e.stopPropagation(); handleDelete(qr.id); }} className="p-2 -m-1 rounded-full hover:bg-red-500/20" aria-label={t("qrCodePage.deleteAriaLabel")}><Trash2 size={16} className="text-red-500" /></button>
-                </div>
-              </div>
-            )) : <p className={textSecondary}>{searchQuery ? t("qrCodePage.noCodesFound") : t("qrCodePage.noSavedCodes")}</p>}
-            </div>
+                </motion.div>
+              )) : (
+                <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className={textSecondary}>
+                  {searchQuery ? t("qrCodePage.noCodesFound") : t("qrCodePage.noSavedCodes")}
+                </motion.p>
+              )}
+            </AnimatePresence>
+          </div>
         </div>
       </div>
 
       {/* Right Column: Preview */}
       <div className="lg:col-span-1">
         <Card className={`${cardBg} border ${border} sticky top-24`}>
-          <CardHeader>
-            <h2 className={`text-xl font-bold ${textPrimary}`}>{t("qrCodePage.previewTitle")}</h2>
+          <CardHeader className="p-4">
+            <h3 className={`text-lg font-semibold ${textPrimary}`}>{t('qrCodePage.previewTitle')}</h3>
           </CardHeader>
-          <CardContent className="p-6 flex flex-col items-center justify-center space-y-4">
-            {previewData ? (
-              <>
-                <div ref={qrRef} className="p-4 bg-white rounded-lg inline-block" />
-                <div className="text-center">
-                  <p className={`font-bold text-lg ${textPrimary}`}>{previewData.label}</p>
-                  {previewData.type === 'Fixed' && previewData.amount && <p className={`${textSecondary}`}>Amount: ₹{previewData.amount}</p>}
-                  <p className={`text-xs ${textSecondary} break-all`}>{previewData.upiId}</p>
-                </div>
-                <div className="w-full grid grid-cols-2 gap-3 pt-2">
-                  <Button onClick={() => handleDownload('png')} variant="outline" className={`w-full ${previewButton}`}><Download className="mr-2 h-4 w-4"/>{t("qrCodePage.downloadPng")}</Button>
-                  <Button onClick={() => handleDownload('svg')} variant="outline" className={`w-full ${previewButton}`}><Download className="mr-2 h-4 w-4"/>{t("qrCodePage.downloadSvg")}</Button>
-              </div>
-                {navigator.share && (
-                  <Button onClick={handleShare} variant="outline" className={`w-full col-span-2 ${previewButton}`}>
-                    <Share2 className="mr-2 h-4 w-4" />{t("qrCodePage.share")}
-                  </Button>
-                )}
-                <Button onClick={handleCopyLink} variant="outline" className={`w-full col-span-2 ${previewButton}`}>
-                  <Copy className="mr-2 h-4 w-4" />{t("qrCodePage.copyLink")}
-                </Button>
-              </>
-            ) : (
-              <div className="h-[400px] flex flex-col items-center justify-center text-center animate-pulse">
-                  <div className={`w-64 h-64 ${placeholderBg} rounded-lg`}></div>
-                  <div className={`w-48 h-6 ${placeholderBg} rounded-md mt-4`}></div>
-                  <div className={`w-32 h-4 ${placeholderBg} rounded-md mt-2`}></div>
-              </div>
-            )}
+          <CardContent className="p-4 flex flex-col items-center gap-4">
+            <AnimatePresence>
+              {previewData ? (
+                <motion.div
+                  key={previewData.id || 'form-preview'}
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.9 }}
+                  transition={{ duration: 0.3 }}
+                  className="w-full flex flex-col items-center"
+                >
+                  <div className="text-center p-4 bg-white rounded-lg" ref={qrRefContainer}>
+                    <div ref={qrRef} className="mx-auto" />
+                    {(previewData.logo || previewData.displayText) && (
+                      <div className="mt-4 flex flex-col items-center gap-2">
+                        {previewData.logo && (
+                          <img src={previewData.logo} alt="Logo" className="h-12 w-12 object-contain" />
+                        )}
+                        {previewData.displayText && (
+                          <p className={`font-semibold text-lg text-black`}>{previewData.displayText}</p>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                  <div className="w-full grid grid-cols-2 gap-3 pt-4">
+                     <Button onClick={() => handleDownload('png')} variant="outline" className={`w-full ${previewButton}`}><Download className="mr-2 h-4 w-4"/>{t("qrCodePage.downloadPng")}</Button>
+                     <Button onClick={() => handleDownload('svg')} variant="outline" className={`w-full ${previewButton}`}><Download className="mr-2 h-4 w-4"/>{t("qrCodePage.downloadSvg")}</Button>
+                     <Button onClick={handleDownloadPDF} variant="outline" className={`w-full col-span-2 ${previewButton}`}><Download className="mr-2 h-4 w-4"/>{t("buttons.downloadPdf")}</Button>
+                  </div>
+                   {navigator.share && (
+                     <Button onClick={handleShare} variant="outline" className={`w-full col-span-2 mt-3 ${previewButton}`}>
+                       <Share2 className="mr-2 h-4 w-4" />{t("qrCodePage.share")}
+                     </Button>
+                   )}
+                   <Button onClick={handleCopyLink} variant="outline" className={`w-full col-span-2 mt-3 ${previewButton}`}>
+                     <Copy className="mr-2 h-4 w-4" />{t("qrCodePage.copyLink")}
+                   </Button>
+                </motion.div>
+              ) : (
+                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="h-[256px] w-[256px] bg-gray-200 dark:bg-slate-700 rounded-lg flex flex-col items-center justify-center text-center p-4">
+                  <QrCode className="h-16 w-16 text-gray-400 dark:text-slate-500 mb-4" />
+                  <p className={textSecondary}>{t('qrCodePage.noPreview')}</p>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </CardContent>
         </Card>
       </div>

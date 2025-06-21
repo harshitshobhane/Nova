@@ -36,18 +36,30 @@
     "dotStyle": "Dot Style",
     "cornerStyle": "Corner Style",
     "dotStylePlaceholder": "Select dot style",
-    "cornerStylePlaceholder": "Select corner style"
+    "cornerStylePlaceholder": "Select corner style",
+    "displayTextLabel": "Display Text Below QR",
+    "displayTextPlaceholder": "e.g., Scan to Pay",
+    "scans": "Scans"
+  },
+  "buttons": {
+    "downloadPdf": "Download PDF",
+    "clear": "Clear",
+    "cancel": "Cancel"
   },
   "toasts": {
-    "logoAdded": "Logo added.",
-    "downloadSuccess": "QR Code downloaded as {{format}}",
+    "logoAdded": "Logo added successfully.",
+    "downloadSuccess": "QR Code downloaded as {{format}}.",
     "downloadFailed": "Failed to download QR Code.",
     "shareFailed": "Could not share QR code. Your browser may not support it.",
-    "requiredFields": "UPI ID and Label are required.",
-    "qrSaved": "QR Code saved!",
-    "qrUpdated": "QR Code updated!",
-    "qrDeleted": "QR Code deleted.",
-    "linkCopied": "Payment link copied to clipboard",
-    "copyFailed": "Failed to copy link"
+    "requiredFields": "UPI ID and Label are required fields.",
+    "qrSaved": "QR Code has been saved successfully!",
+    "qrUpdated": "QR Code has been updated successfully!",
+    "qrDeleted": "QR Code has been deleted successfully.",
+    "linkCopied": "Payment link copied to clipboard.",
+    "upiIdCopied": "UPI ID copied to clipboard.",
+    "copyFailed": "Failed to copy to clipboard.",
+    "pdfSuccess": "PDF generated and downloaded successfully!",
+    "pdfError": "Failed to generate PDF.",
+    "generatingPdf": "Generating PDF, please wait..."
   }
 } 

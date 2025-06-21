@@ -34,20 +34,32 @@
     "share": "Compartir",
     "copyLink": "Copiar Enlace",
     "dotStyle": "Estilo de Punto",
-    "cornerStyle": "Estilo de Esquina",
+    "cornerStyle": "Estilo de esquina",
     "dotStylePlaceholder": "Seleccionar estilo de punto",
-    "cornerStylePlaceholder": "Seleccionar estilo de esquina"
+    "cornerStylePlaceholder": "Seleccionar estilo de esquina",
+    "displayTextLabel": "Mostrar texto debajo del QR",
+    "displayTextPlaceholder": "Ej., Escanear para pagar",
+    "scans": "Escaneos"
+  },
+  "buttons": {
+    "downloadPdf": "Descargar PDF",
+    "clear": "Limpiar",
+    "cancel": "Cancelar"
   },
   "toasts": {
-    "logoAdded": "Logo añadido.",
-    "downloadSuccess": "Código QR descargado como {{format}}",
-    "downloadFailed": "Error al descargar el Código QR.",
+    "logoAdded": "Logo agregado correctamente.",
+    "downloadSuccess": "Código QR descargado como {{format}}.",
+    "downloadFailed": "Error al descargar el código QR.",
     "shareFailed": "No se pudo compartir el código QR. Es posible que su navegador no sea compatible.",
-    "requiredFields": "Se requieren el ID de UPI y la Etiqueta.",
-    "qrSaved": "¡Código QR guardado!",
-    "qrUpdated": "¡Código QR actualizado!",
-    "qrDeleted": "Código QR eliminado.",
-    "linkCopied": "Enlace de pago copiado al portapapeles",
-    "copyFailed": "Error al copiar el enlace"
+    "requiredFields": "El ID de UPI y la etiqueta son campos obligatorios.",
+    "qrSaved": "¡Código QR guardado correctamente!",
+    "qrUpdated": "¡Código QR actualizado correctamente!",
+    "qrDeleted": "Código QR eliminado correctamente.",
+    "linkCopied": "Enlace de pago copiado al portapapeles.",
+    "upiIdCopied": "ID de UPI copiado al portapapeles.",
+    "copyFailed": "Error al copiar al portapapeles.",
+    "pdfSuccess": "¡PDF generado y descargado correctamente!",
+    "pdfError": "Error al generar el PDF.",
+    "generatingPdf": "Generando PDF, por favor espere..."
   }
 } 

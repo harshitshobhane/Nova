@@ -34,20 +34,32 @@
     "share": "共有",
     "copyLink": "リンクをコピー",
     "dotStyle": "ドットのスタイル",
-    "cornerStyle": "コーナーのスタイル",
-    "dotStylePlaceholder": "ドットのスタイルを選択",
-    "cornerStylePlaceholder": "コーナーのスタイルを選択"
+    "cornerStyle": "角のスタイル",
+    "dotStylePlaceholder": "ドットスタイルを選択",
+    "cornerStylePlaceholder": "角のスタイルを選択",
+    "displayTextLabel": "QRの下にテキストを表示",
+    "displayTextPlaceholder": "例：スキャンして支払う",
+    "scans": "スキャン"
+  },
+  "buttons": {
+    "downloadPdf": "PDFをダウンロード",
+    "clear": "クリア",
+    "cancel": "キャンセル"
   },
   "toasts": {
-    "logoAdded": "ロゴが追加されました。",
-    "downloadSuccess": "QRコードを{{format}}としてダウンロードしました",
+    "logoAdded": "ロゴが正常に追加されました。",
+    "downloadSuccess": "QRコードを{{format}}としてダウンロードしました。",
     "downloadFailed": "QRコードのダウンロードに失敗しました。",
     "shareFailed": "QRコードを共有できませんでした。お使いのブラウザは対応していない可能性があります。",
-    "requiredFields": "UPI IDとラベルは必須です。",
-    "qrSaved": "QRコードを保存しました！",
-    "qrUpdated": "QRコードを更新しました！",
-    "qrDeleted": "QRコードを削除しました。",
-    "linkCopied": "支払いリンクをクリップボードにコピーしました",
-    "copyFailed": "リンクのコピーに失敗しました"
+    "requiredFields": "UPI IDとラベルは必須項目です。",
+    "qrSaved": "QRコードが正常に保存されました！",
+    "qrUpdated": "QRコードが正常に更新されました！",
+    "qrDeleted": "QRコードが正常に削除されました。",
+    "linkCopied": "支払いリンクをクリップボードにコピーしました。",
+    "upiIdCopied": "UPI IDをクリップボードにコピーしました。",
+    "copyFailed": "クリップボードへのコピーに失敗しました。",
+    "pdfSuccess": "PDFが正常に生成され、ダウンロードされました！",
+    "pdfError": "PDFの生成に失敗しました。",
+    "generatingPdf": "PDFを生成中です、しばらくお待ちください..."
   }
 } 

@@ -36,18 +36,30 @@
     "dotStyle": "Punktstil",
     "cornerStyle": "Eckstil",
     "dotStylePlaceholder": "Punktstil auswählen",
-    "cornerStylePlaceholder": "Eckstil auswählen"
+    "cornerStylePlaceholder": "Eckstil auswählen",
+    "displayTextLabel": "Text unter QR anzeigen",
+    "displayTextPlaceholder": "Z.B. Scannen zum Bezahlen",
+    "scans": "Scans"
+  },
+  "buttons": {
+    "downloadPdf": "PDF Herunterladen",
+    "clear": "Löschen",
+    "cancel": "Abbrechen"
   },
   "toasts": {
-    "logoAdded": "Logo hinzugefügt.",
-    "downloadSuccess": "QR-Code als {{format}} heruntergeladen",
+    "logoAdded": "Logo erfolgreich hinzugefügt.",
+    "downloadSuccess": "QR-Code als {{format}} heruntergeladen.",
     "downloadFailed": "Fehler beim Herunterladen des QR-Codes.",
     "shareFailed": "QR-Code konnte nicht geteilt werden. Ihr Browser unterstützt dies möglicherweise nicht.",
-    "requiredFields": "UPI-ID und Bezeichnung sind erforderlich.",
-    "qrSaved": "QR-Code gespeichert!",
-    "qrUpdated": "QR-Code aktualisiert!",
-    "qrDeleted": "QR-Code gelöscht.",
-    "linkCopied": "Zahlungslink in die Zwischenablage kopiert",
-    "copyFailed": "Fehler beim Kopieren des Links"
+    "requiredFields": "UPI-ID und Bezeichnung sind Pflichtfelder.",
+    "qrSaved": "QR-Code erfolgreich gespeichert!",
+    "qrUpdated": "QR-Code erfolgreich aktualisiert!",
+    "qrDeleted": "QR-Code erfolgreich gelöscht.",
+    "linkCopied": "Zahlungslink in die Zwischenablage kopiert.",
+    "upiIdCopied": "UPI-ID in die Zwischenablage kopiert.",
+    "copyFailed": "Fehler beim Kopieren in die Zwischenablage.",
+    "pdfSuccess": "PDF erfolgreich erstellt und heruntergeladen!",
+    "pdfError": "Fehler beim Erstellen des PDFs.",
+    "generatingPdf": "PDF wird erstellt, bitte warten..."
   }
 } 
