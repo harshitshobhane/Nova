@@ -145,6 +145,18 @@ const QRCodePage = () => {
       toast.error("Could not share QR code. Your browser may not support it.");
     }
   };
+
+  // Copies the generated UPI payment link to the clipboard
+  const handleCopyLink = async () => {
+    if (!previewData) return;
+    try {
+      await navigator.clipboard.writeText(upiStringForPreview);
+      toast.success('Payment link copied to clipboard');
+    } catch (err) {
+      console.error('Copy failed:', err);
+      toast.error('Failed to copy link');
+    }
+  };
   
   const resetForm = () => {
     setLabel('');
@@ -383,7 +395,14 @@ const QRCodePage = () => {
                   <Button onClick={() => handleDownload('png')} variant="outline" className="w-full"><Download className="mr-2 h-4 w-4"/>PNG</Button>
                   <Button onClick={() => handleDownload('svg')} variant="outline" className="w-full"><Download className="mr-2 h-4 w-4"/>SVG</Button>
               </div>
-                {navigator.share && <Button onClick={handleShare} variant="outline" className="w-full col-span-2"><Share2 className="mr-2 h-4 w-4" />Share</Button>}
+                {navigator.share && (
+                  <Button onClick={handleShare} variant="outline" className="w-full col-span-2">
+                    <Share2 className="mr-2 h-4 w-4" />Share
+                  </Button>
+                )}
+                <Button onClick={handleCopyLink} variant="outline" className="w-full col-span-2">
+                  <Copy className="mr-2 h-4 w-4" />Copy Link
+                </Button>
               </>
             ) : (
               <div className="h-[400px] flex flex-col items-center justify-center text-center animate-pulse">
