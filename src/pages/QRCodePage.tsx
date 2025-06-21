@@ -8,6 +8,7 @@ import { toast } from "sonner";
 import { toPng } from 'html-to-image';
 import { QRCodeSVG } from 'qrcode.react';
 import { QrCode, Download, Copy, Trash2, Search, Pencil, Check, X, ImagePlus, Share2 } from 'lucide-react';
+import { useOutletContext } from 'react-router-dom';
 
 interface QRCode {
   id: number;
@@ -92,7 +93,7 @@ const QRCodePage = () => {
 
   const handleDownload = async (format: 'png' | 'svg') => {
     if (!qrRef.current || !previewData) return;
-    const filename = `${previewData.label.replace(/\s+/g, '-') || 'qrcode'}.${format}`;
+    const filename = `${previewData.label.replace(/\s+/g, '-')}.${format}`;
 
     try {
       if (format === 'png') {
@@ -211,14 +212,18 @@ const QRCodePage = () => {
 
   const isFormValid = upiId && label;
 
-  const cardBg = 'bg-slate-900/50';
-  const textPrimary = 'text-slate-100';
-  const textSecondary = 'text-slate-400';
-  const border = 'border-slate-700';
-  const inputBg = 'bg-slate-800';
+  const { theme } = useOutletContext<{ theme: 'light' | 'dark' }>();
+  // Theme-based variables
+  const mainBg = theme === 'dark' ? 'bg-[#181c2a]' : 'bg-[#f6f7fb]';
+  const cardBg = theme === 'dark' ? 'bg-white/10' : 'bg-white';
+  const border = theme === 'dark' ? 'border-gray-800' : 'border-[#ececf6]';
+  const textPrimary = theme === 'dark' ? 'text-white' : 'text-[#23263a]';
+  const textSecondary = theme === 'dark' ? 'text-gray-400' : 'text-gray-600';
+  const inputBg = theme === 'dark' ? 'bg-[#23263a] text-white' : 'bg-white/80 text-[#23263a]';
+  const fileButton = theme === 'dark' ? 'bg-[#23263a] border-gray-700 text-slate-200 hover:bg-[#181c2a] hover:text-white' : 'bg-white border-[#ececf6] text-[#7c3aed] hover:bg-[#f3f4f6] hover:text-[#23263a]';
 
   return (
-    <div className="p-4 md:p-8 grid grid-cols-1 lg:grid-cols-3 gap-8 max-w-7xl mx-auto text-white">
+    <div className={`p-4 md:p-8 grid grid-cols-1 lg:grid-cols-3 gap-8 max-w-7xl mx-auto ${mainBg} ${textPrimary}`}>
       {/* Left Column: Form */}
       <div className={`lg:col-span-1 space-y-6 ${cardBg} p-6 rounded-lg border ${border}`}>
         <h2 className={`text-2xl font-bold ${textPrimary}`}>{editingQR ? "Edit QR Code" : "Create QR Code"}</h2>
@@ -277,7 +282,7 @@ const QRCodePage = () => {
               <Button
                 type="button"
                 variant="outline"
-                className="flex items-center gap-2 bg-slate-800 border-slate-700 text-slate-200 hover:bg-slate-700 hover:text-white px-4 py-2 rounded-md transition-all"
+                className={`flex items-center gap-2 px-4 py-2 rounded-md transition-all ${fileButton}`}
                 onClick={() => fileInputRef.current?.click()}
                 aria-label="Choose logo file"
               >
@@ -292,7 +297,7 @@ const QRCodePage = () => {
             </div>
             {logoImage && (
               <div className="flex items-center gap-2 mt-1">
-                <img src={logoImage} alt="Logo preview" className="w-8 h-8 rounded bg-slate-700 object-contain border border-slate-600" />
+                <img src={logoImage} alt="Logo preview" className={`w-8 h-8 rounded object-contain border ${theme === 'dark' ? 'bg-slate-700 border-slate-600' : 'bg-gray-100 border-gray-300'}`} />
                 <span className="text-xs text-slate-400 truncate max-w-[120px]">Logo selected</span>
               </div>
             )}
