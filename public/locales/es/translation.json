@@ -39,7 +39,14 @@
     "cornerStylePlaceholder": "Seleccionar estilo de esquina",
     "displayTextLabel": "Mostrar texto debajo del QR",
     "displayTextPlaceholder": "Ej., Escanear para pagar",
-    "scans": "Escaneos"
+    "scans": "Escaneos",
+    "trackingStarted": "Seguimiento en tiempo real iniciado",
+    "trackingStopped": "Seguimiento en tiempo real detenido",
+    "newScanDetected": "Se ha detectado un nuevo escaneo",
+    "exportSuccess": "Datos de análisis exportados con éxito",
+    "trackingActiveSubtitle": "Recibiendo eventos en vivo. Haz clic en 'Simular Pago' para probar.",
+    "trackingInactiveSubtitle": "El seguimiento está en pausa. Inicia el seguimiento para habilitar actualizaciones en vivo.",
+    "simulatePayment": "Simular Pago"
   },
   "buttons": {
     "downloadPdf": "Descargar PDF",

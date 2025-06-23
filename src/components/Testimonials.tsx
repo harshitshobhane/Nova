@@ -1,6 +1,5 @@
 import React from 'react';
-import { Card, CardContent } from '@/components/ui/card';
-import { Star } from 'lucide-react';
+import { InfiniteMovingCards } from '@/components/ui/infinite-moving-cards';
 
 interface TestimonialsProps {
   theme?: 'light' | 'dark';
@@ -9,46 +8,56 @@ interface TestimonialsProps {
 const Testimonials: React.FC<TestimonialsProps> = ({ theme = 'dark' }) => {
   const testimonials = [
     {
+      quote: "YourPay transformed our payment processing completely. The AI-powered fraud detection reduced our failed transactions by 35% and improved our cash flow dramatically.",
       name: "Rajesh Sharma",
-      role: "CFO",
-      company: "TechnoIndia Solutions",
-      content: "इस platform ने हमारे B2B payment processing को क्रांतिकारी बना दिया। AI insights की मदद से हमने failed payments 35% कम कर दिए और cash flow में काफी सुधार देखा।",
-      rating: 5,
-      avatar: "RS"
+      title: "Chief Financial Officer"
     },
     {
+      quote: "The UPI integration is seamless and the fraud protection is top-notch. We've seen a 40% drop in chargebacks since switching to YourPay.",
       name: "Priya Patel",
-      role: "E-commerce Director",
-      company: "ShopIndia Pvt Ltd",
-      content: "UPI integration और fraud protection बेहतरीन है। हमने इस platform पर switch करने के बाद chargebacks में 40% की कमी देखी है।",
-      rating: 5,
-      avatar: "PP"
+      title: "E-commerce Director"
     },
     {
+      quote: "As a startup, we needed a payment solution that could scale with us. YourPay's analytics and GST reporting features have been game-changing for our business.",
       name: "Amit Kumar",
-      role: "Founder & CEO",
-      company: "StartupBharat",
-      content: "As a growing startup, हमें एक scalable payment solution की जरूरत थी। The analytics और GST reporting features ने हमारा business transform कर दिया।",
-      rating: 5,
-      avatar: "AK"
+      title: "Founder & CEO"
+    },
+    {
+      quote: "RBI compliance was always a headache until we found YourPay. Now we can focus on growing our business while they handle all regulatory requirements.",
+      name: "Deepika Singh",
+      title: "Operations Manager"
+    },
+    {
+      quote: "Our customers love the mobile checkout experience. Conversion rates have jumped 25% since we implemented YourPay's mobile-optimized solution.",
+      name: "Vikram Mehta",
+      title: "Chief Technology Officer"
+    },
+    {
+      quote: "The real-time analytics dashboard gives us insights we never had before. Every business decision is now backed by solid data from YourPay.",
+      name: "Anjali Desai",
+      title: "Head of Finance"
+    },
+    {
+      quote: "Universal payment acceptance means no customer gets left behind. UPI, cards, wallets - YourPay handles everything flawlessly.",
+      name: "Rahul Verma",
+      title: "Startup Founder"
+    },
+    {
+      quote: "99.9% uptime and lightning-fast processing have earned our customers' trust. Payment failures are virtually non-existent with YourPay.",
+      name: "Sneha Reddy",
+      title: "Product Manager"
     }
   ];
 
   const sectionBg = theme === 'dark' ? 'bg-black' : 'bg-white';
   const headingText = theme === 'dark' ? 'text-white' : 'text-gray-900';
   const subText = theme === 'dark' ? 'text-gray-100' : 'text-gray-700';
-  const cardBg = theme === 'dark' ? 'bg-white/15' : 'bg-white';
-  const cardBorder = theme === 'dark' ? 'border-white/30' : 'border-gray-200';
-  const testimonialContent = theme === 'dark' ? 'text-gray-200' : 'text-gray-700';
-  const nameText = theme === 'dark' ? 'text-white' : 'text-gray-900';
-  const roleText = theme === 'dark' ? 'text-gray-300' : 'text-gray-600';
-  const companyText = theme === 'dark' ? 'text-gray-400' : 'text-gray-500';
 
   return (
-    <section className={`py-16 sm:py-20 md:py-24 px-4 relative ${sectionBg}`}>
+    <section className={`py-12 sm:py-16 px-4 relative ${sectionBg}`}>
       <div className="max-w-7xl mx-auto">
-        <div className="text-center mb-12 md:mb-16">
-          <h2 className={`text-3xl sm:text-4xl md:text-5xl font-bold ${headingText} mb-4 md:mb-6`}>
+        <div className="text-center mb-8 md:mb-12">
+          <h2 className={`text-3xl sm:text-4xl md:text-5xl font-bold ${headingText} mb-4`}>
             Trusted by 
             <span className="bg-gradient-to-r from-orange-400 to-green-400 bg-clip-text text-transparent"> Indian Leaders</span>
           </h2>
@@ -57,34 +66,12 @@ const Testimonials: React.FC<TestimonialsProps> = ({ theme = 'dark' }) => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
-          {testimonials.map((testimonial, index) => (
-            <Card 
-              key={index}
-              className={`${cardBg} backdrop-blur-lg border ${cardBorder} hover:bg-white/20 transition-all duration-300 hover:scale-105`}
-            >
-              <CardContent className="p-6 sm:p-8">
-                <div className="flex items-center mb-4">
-                  {[...Array(testimonial.rating)].map((_, i) => (
-                    <Star key={i} className="h-5 w-5 text-yellow-400 fill-current" />
-                  ))}
-                </div>
-                
-                <p className={`${testimonialContent} mb-6 leading-relaxed text-base`}>"{testimonial.content}"</p>
-                
-                <div className="flex items-center">
-                  <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-r from-orange-600 to-green-600 rounded-full flex items-center justify-center text-white font-semibold mr-4 flex-shrink-0">
-                    {testimonial.avatar}
-                  </div>
-                  <div>
-                    <p className={`${nameText} font-semibold text-base sm:text-lg`}>{testimonial.name}</p>
-                    <p className={`${roleText} text-sm`}>{testimonial.role}</p>
-                    <p className={`${companyText} text-xs`}>{testimonial.company}</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
+        <div className="h-[32rem] rounded-md flex flex-col antialiased bg-transparent items-center justify-center relative overflow-hidden">
+          <InfiniteMovingCards
+            items={testimonials}
+            direction="right"
+            speed="very-slow"
+          />
         </div>
       </div>
     </section>

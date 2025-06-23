@@ -1,16 +1,26 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
 import { Bell, User, Sun, Moon, Menu } from 'lucide-react';
 import Sidebar from '../components/Sidebar';
 
 const MainLayout = () => {
   const navigate = useNavigate();
-  const [theme, setTheme] = useState<'light' | 'dark'>('dark');
+  const [theme, setTheme] = useState<'light' | 'dark'>('light');
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
 
+  useEffect(() => {
+    const root = window.document.documentElement;
+    root.classList.remove('light', 'dark');
+    root.classList.add(theme);
+  }, [theme]);
+
+  const handleThemeToggle = () => {
+    setTheme(theme === 'dark' ? 'light' : 'dark');
+  };
+
   return (
-    <div className={`flex min-h-screen ${theme === 'dark' ? 'bg-[#181c2a]' : 'bg-[#f6f7fb]'}`}>
+    <div className="flex min-h-screen bg-[#f6f7fb] dark:bg-[#181c2a]">
       {/* Mobile Sidebar Overlay */}
       {mobileSidebarOpen && (
         <div 
@@ -32,23 +42,23 @@ const MainLayout = () => {
         <header className="w-full p-4 lg:px-6 h-16 flex items-center justify-between lg:justify-end">
             <button
               onClick={() => setMobileSidebarOpen(true)}
-              className={`p-2 rounded-lg ${theme === 'dark' ? 'bg-[#23263a] text-white' : 'bg-white text-[#7c3aed]'} border ${theme === 'dark' ? 'border-gray-700' : 'border-gray-200'} lg:hidden`}
+              className="p-2 rounded-lg bg-white text-[#7c3aed] border border-gray-200 lg:hidden dark:bg-[#23263a] dark:text-white dark:border-gray-700"
             >
               <Menu className="h-5 w-5" />
             </button>
             <div className="flex items-center space-x-3">
               <button
-                onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-                className={`p-2 rounded-full border transition-colors ${theme === 'dark' ? 'bg-[#23263a] border-[#23263a] text-yellow-400 hover:bg-[#181c2a]' : 'bg-white border-[#ececf6] text-[#7c3aed] hover:bg-[#f3f4f6]'}`}
+                onClick={handleThemeToggle}
+                className="p-2 rounded-full border transition-colors bg-white border-[#ececf6] text-[#7c3aed] hover:bg-[#f3f4f6] dark:bg-[#23263a] dark:border-[#23263a] dark:text-yellow-400 dark:hover:bg-[#181c2a]"
                 aria-label="Toggle theme"
               >
                 {theme === 'dark' ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
               </button>
-              <button className={`relative p-2 rounded-full ${theme === 'dark' ? 'bg-[#23263a] hover:bg-[#23263a]/80 border border-[#23263a]' : 'bg-white hover:bg-[#ececf6] border border-[#e5e7eb]'} transition-colors`}>
+              <button className="relative p-2 rounded-full bg-white hover:bg-[#ececf6] border border-e5e7eb] transition-colors dark:bg-[#23263a] dark:hover:bg-[#23263a]/80 dark:border-[#23263a]">
                 <Bell className="h-5 w-5 text-[#7c3aed]" />
                 <span className="absolute top-2 right-2 w-2 h-2 bg-green-400 rounded-full"></span>
               </button>
-              <div className={`w-10 h-10 rounded-full flex items-center justify-center font-semibold text-lg border ${theme === 'dark' ? 'bg-[#23263a] text-[#a78bfa] border-[#23263a]' : 'bg-[#ececf6] text-[#7c3aed] border-[#e5e7eb]'}`}>
+              <div className="w-10 h-10 rounded-full flex items-center justify-center font-semibold text-lg border bg-[#ececf6] text-[#7c3aed] border-[#e5e7eb] dark:bg-[#23263a] dark:text-[#a78bfa] dark:border-[#23263a]">
                 <User className="h-6 w-6" />
               </div>
             </div>

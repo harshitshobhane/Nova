@@ -7,7 +7,7 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { toast } from "sonner";
 import { toPng } from 'html-to-image';
 import { QRCodeSVG } from 'qrcode.react';
-import { QrCode, Download, Copy, Trash2, Search, Pencil, Check, X, ImagePlus, Share2, Languages } from 'lucide-react';
+import { QrCode, Download, Copy, Trash2, Search, Pencil, Check, X, ImagePlus, Share2, Languages, BarChart3, TrendingUp, Users, CreditCard } from 'lucide-react';
 import { useOutletContext } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { supportedLngs } from '../i18n';
@@ -17,6 +17,41 @@ import QRCodeStyling, { DotType, CornerSquareType } from 'qr-code-styling';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 import { motion, AnimatePresence } from 'framer-motion';
+import QRAnalytics from '@/components/QRAnalytics';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+
+// Event tracking interfaces
+interface ScanEvent {
+  id: string;
+  timestamp: string;
+  deviceInfo?: {
+    userAgent: string;
+    platform: string;
+    language: string;
+  };
+  location?: {
+    latitude?: number;
+    longitude?: number;
+    city?: string;
+    country?: string;
+  };
+  ipAddress?: string;
+  referrer?: string;
+}
+
+interface PaymentEvent {
+  id: string;
+  timestamp: string;
+  amount: number;
+  status: 'success' | 'failed' | 'pending';
+  transactionId?: string;
+  paymentMethod?: string;
+  failureReason?: string;
+  deviceInfo?: {
+    userAgent: string;
+    platform: string;
+  };
+}
 
 interface QRCode {
   id: number;
@@ -28,8 +63,17 @@ interface QRCode {
   logo?: string; // Stored as a base64 data URL
   dotStyle?: DotType;
   cornerStyle?: CornerSquareType;
-  scanCount?: number;
   displayText?: string;
+  // Enhanced tracking fields
+  createdAt: string;
+  lastScannedAt?: string;
+  totalAmount?: number; // Total amount received
+  successfulPayments?: number;
+  failedPayments?: number;
+  scanHistory?: ScanEvent[];
+  paymentHistory?: PaymentEvent[];
+  uniqueScanners?: number; // Track unique devices/users
+  conversionRate?: number; // Percentage of scans that led to payments
 }
 
 const LanguageSwitcher = () => {
@@ -267,12 +311,6 @@ const QRCodePage = () => {
   const handleSelectQR = (qr: QRCode) => {
     resetForm();
     setSelectedQR(qr);
-
-    // Increment scan count
-    const updatedQRs = qrCodes.map(q =>
-      q.id === qr.id ? { ...q, scanCount: (q.scanCount || 0) + 1 } : q
-    );
-    setQrCodes(updatedQRs);
   };
 
   const handleSaveOrUpdate = () => {
@@ -293,8 +331,15 @@ const QRCodePage = () => {
       logo: logoImage,
       dotStyle: dotStyle,
       cornerStyle: cornerStyle,
-      scanCount: editingQR ? editingQR.scanCount : 0,
       displayText: displayText,
+      createdAt: new Date().toISOString(),
+      totalAmount: type === 'Fixed' ? amount : undefined,
+      successfulPayments: type === 'Fixed' ? (amount ? 1 : 0) : undefined,
+      failedPayments: type === 'Fixed' ? (amount ? 0 : 1) : undefined,
+      scanHistory: [],
+      paymentHistory: [],
+      uniqueScanners: 1,
+      conversionRate: type === 'Fixed' ? (amount ? 100 : 0) : undefined,
     };
     const updatedQRs = editingQR
       ? qrCodes.map(qr => qr.id === editingQR.id ? newQRCodeData : qr)
@@ -402,7 +447,7 @@ const QRCodePage = () => {
       // Header
       pdf.setFontSize(24);
       pdf.setFont('helvetica', 'bold');
-      pdf.text('NovaPay', 40, 40);
+      pdf.text('YourPay', 40, 40);
       pdf.setFontSize(16);
       pdf.setFont('helvetica', 'normal');
       pdf.text(previewData.label, 40, 60);
@@ -454,7 +499,7 @@ const QRCodePage = () => {
         <div className="space-y-2">
           <Label htmlFor="label" className={textSecondary}>{t("qrCodePage.nameLabel")}</Label>
           <Input id="label" name="label" value={label} onChange={e => setLabel(e.target.value)} placeholder={t("qrCodePage.namePlaceholder")} className={`${inputBg} ${border}`} />
-        </div>
+              </div>
 
         <div className="space-y-2">
            <Label className={textSecondary}>{t("qrCodePage.paymentTypeLabel")}</Label>
@@ -481,8 +526,8 @@ const QRCodePage = () => {
           <div className="flex items-center gap-2">
             <Input id="qrColor" type="color" value={qrColor} onChange={e => setQrColor(e.target.value)} className={`${inputBg} ${border} p-1 h-10 w-14 cursor-pointer`} />
             <Input value={qrColor} onChange={e => setQrColor(e.target.value)} placeholder="#000000" className={`${inputBg} ${border} w-full`} />
-          </div>
-        </div>
+              </div>
+            </div>
 
         <div className="grid grid-cols-2 gap-4">
           <div className="space-y-2">
@@ -511,12 +556,12 @@ const QRCodePage = () => {
               </SelectContent>
             </Select>
           </div>
-        </div>
+              </div>
 
         <div className="space-y-2">
           <Label className={textSecondary}>{t("qrCodePage.logoLabel")}</Label>
           <div className="flex flex-col gap-2">
-            <input
+                <input
               id="logo"
               ref={fileInputRef}
               type="file"
@@ -548,13 +593,13 @@ const QRCodePage = () => {
                 <span className="text-xs text-slate-400 truncate max-w-[120px]">{t("qrCodePage.logoSelected")}</span>
               </div>
             )}
-          </div>
-        </div>
+                </div>
+              </div>
 
         <div className="space-y-2">
           <Label htmlFor="displayText" className={textSecondary}>{t("qrCodePage.displayTextLabel")}</Label>
           <Input id="displayText" name="displayText" value={displayText} onChange={e => setDisplayText(e.target.value)} placeholder={t("qrCodePage.displayTextPlaceholder")} className={`${inputBg} ${border}`} />
-        </div>
+            </div>
 
         <div className="flex flex-col sm:flex-row gap-3">
           <Button onClick={handleSaveOrUpdate} disabled={!isFormValid || saveState === 'saving'} className="w-full transition-all duration-200 bg-indigo-600 hover:bg-indigo-700 text-white">
@@ -595,17 +640,13 @@ const QRCodePage = () => {
                   <div className="flex items-center gap-3 overflow-hidden">
                     <div className="flex items-center justify-center min-w-[40px] h-[40px] rounded overflow-hidden">
                       <QRCodeSVG value={buildUpiString(qr)} size={40} bgColor="transparent" fgColor={theme === 'dark' ? qr.color === '#000000' ? '#ffffff' : qr.color : qr.color } />
-                    </div>
+              </div>
                     <div className='truncate'>
                       <p className={`${textPrimary} font-semibold truncate`}>{qr.label}</p>
                       <p className={`${textSecondary} text-sm truncate`}>{qr.upiId}</p>
-                    </div>
-                  </div>
+              </div>
+            </div>
                   <div className="flex items-center gap-2 flex-shrink-0">
-                    <div className="text-right">
-                      <p className={`text-xs ${textSecondary}`}>{t('qrCodePage.scans')}</p>
-                      <p className={`font-bold ${textPrimary}`}>{qr.scanCount || 0}</p>
-                    </div>
                     <motion.div whileHover={{ scale: 1.1 }} className="flex items-center">
                       <Button size="icon" variant="ghost" className="h-8 w-8" onClick={(e) => handleCopyUpiId(e, qr.upiId)}>
                         <Copy className="h-4 w-4" />
@@ -613,6 +654,25 @@ const QRCodePage = () => {
                       <Button size="icon" variant="ghost" className="h-8 w-8" onClick={(e) => { e.stopPropagation(); handleEdit(qr); }}>
                         <Pencil className="h-4 w-4" />
                       </Button>
+                      <Dialog>
+                        <DialogTrigger asChild>
+                          <Button size="icon" variant="ghost" className="h-8 w-8" onClick={(e) => e.stopPropagation()}>
+                            <BarChart3 className="h-4 w-4" />
+                          </Button>
+                        </DialogTrigger>
+                        <DialogContent className={`max-w-4xl max-h-[90vh] overflow-y-auto ${cardBg} ${textPrimary} border-none`}>
+                          <DialogHeader>
+                            <DialogTitle className={`flex items-center gap-2 ${textPrimary}`}>
+                              <BarChart3 className="h-5 w-5" />
+                              {t('analytics.title')} - {qr.label}
+                            </DialogTitle>
+                          </DialogHeader>
+                          <QRAnalytics 
+                            qrCode={qr} 
+                            theme={theme} 
+                          />
+                        </DialogContent>
+                      </Dialog>
                       <Button size="icon" variant="ghost" className="h-8 w-8" onClick={(e) => { e.stopPropagation(); handleDelete(qr.id); }}>
                         <Trash2 className="h-4 w-4 text-red-500" />
                       </Button>

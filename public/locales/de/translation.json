@@ -39,7 +39,14 @@
     "cornerStylePlaceholder": "Eckstil auswählen",
     "displayTextLabel": "Text unter QR anzeigen",
     "displayTextPlaceholder": "Z.B. Scannen zum Bezahlen",
-    "scans": "Scans"
+    "scans": "Scans",
+    "trackingStarted": "Echtzeit-Tracking gestartet",
+    "trackingStopped": "Echtzeit-Tracking gestoppt",
+    "newScanDetected": "Ein neuer Scan wurde erkannt",
+    "exportSuccess": "Analysedaten erfolgreich exportiert",
+    "trackingActiveSubtitle": "Live-Ereignisse werden empfangen. Klicken Sie auf 'Zahlung simulieren' zum Testen.",
+    "trackingInactiveSubtitle": "Das Tracking ist pausiert. Starten Sie das Tracking, um Live-Updates zu aktivieren.",
+    "simulatePayment": "Zahlung simulieren"
   },
   "buttons": {
     "downloadPdf": "PDF Herunterladen",

@@ -39,7 +39,14 @@
     "cornerStylePlaceholder": "कॉर्नर स्टाइल चुनें",
     "displayTextLabel": "QR के नीचे टेक्स्ट दिखाएं",
     "displayTextPlaceholder": "जैसे, भुगतान करने के लिए स्कैन करें",
-    "scans": "स्कैन"
+    "scans": "स्कैन",
+    "trackingStarted": "वास्तविक समय ट्रैकिंग शुरू हुई",
+    "trackingStopped": "वास्तविक समय ट्रैकिंग बंद हो गई",
+    "newScanDetected": "एक नया स्कैन पता चला है",
+    "exportSuccess": "एनालिटिक्स डेटा सफलतापूर्वक निर्यात किया गया",
+    "trackingActiveSubtitle": "लाइव ईवेंट प्राप्त हो रहे हैं। परीक्षण के लिए 'भुगतान अनुकरण करें' पर क्लिक करें।",
+    "trackingInactiveSubtitle": "ट्रैकिंग रुकी हुई है। लाइव अपडेट सक्षम करने के लिए ट्रैकिंग प्रारंभ करें।",
+    "simulatePayment": "भुगतान अनुकरण करें"
   },
   "buttons": {
     "downloadPdf": "पीडीएफ़ डाउनलोड करें",

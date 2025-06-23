@@ -25,12 +25,12 @@ import Testimonials from '@/components/Testimonials';
 import Footer from '@/components/Footer';
 
 const HomePage = () => {
-  const [theme, setTheme] = useState<'light' | 'dark'>('dark');
+  const [theme, setTheme] = useState<'light' | 'dark'>("light");
 
   const handleThemeToggle = (newTheme: 'light' | 'dark') => {
     setTheme(newTheme);
-    document.body.classList.remove('dark', 'light');
-    document.body.classList.add(newTheme);
+    document.documentElement.classList.remove('dark', 'light');
+    document.documentElement.classList.add(newTheme);
   };
 
   const bgColor = theme === 'dark' ? 'bg-black' : 'bg-white';
@@ -39,34 +39,34 @@ const HomePage = () => {
   return (
     <div className={`min-h-screen ${bgColor}`}>
       <div id="home">
-        <Hero theme={theme} onThemeToggle={handleThemeToggle} />
-      </div>
-      <div id="features" style={sectionBgColor}>
-        <Features theme={theme} />
+        <Hero />
       </div>
       <div id="how" style={sectionBgColor}>
-        <HowItWorks theme={theme} />
+        <HowItWorks />
+        <div id="features" style={sectionBgColor}>
+          <Features />
+        </div>
       </div>
       <div id="pricing" style={sectionBgColor}>
-        <Pricing theme={theme} />
+        <Pricing />
       </div>
       <div id="testimonials" style={sectionBgColor}>
-        <Testimonials theme={theme} />
+        <Testimonials />
       </div>
       <div id="login">
-        <Footer theme={theme} />
+        <Footer />
       </div>
     </div>
   );
 };
 
 const Index = () => {
-  const [theme, setTheme] = useState<'light' | 'dark'>('dark');
+  const [theme, setTheme] = useState<'light' | 'dark'>("light");
 
   const handleThemeToggle = (newTheme: 'light' | 'dark') => {
     setTheme(newTheme);
-    document.body.classList.remove('dark', 'light');
-    document.body.classList.add(newTheme);
+    document.documentElement.classList.remove('dark', 'light');
+    document.documentElement.classList.add(newTheme);
   };
 
   const bgColor = theme === 'dark' ? 'bg-black' : 'bg-white';

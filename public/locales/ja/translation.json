@@ -39,7 +39,14 @@
     "cornerStylePlaceholder": "角のスタイルを選択",
     "displayTextLabel": "QRの下にテキストを表示",
     "displayTextPlaceholder": "例：スキャンして支払う",
-    "scans": "スキャン"
+    "scans": "スキャン",
+    "trackingStarted": "リアルタイム追跡が開始されました",
+    "trackingStopped": "リアルタイム追跡が停止しました",
+    "newScanDetected": "新しいスキャンが検出されました",
+    "exportSuccess": "分析データが正常にエクスポートされました",
+    "trackingActiveSubtitle": "ライブイベントを受信しています。「支払いをシミュレート」をクリックしてテストします。",
+    "trackingInactiveSubtitle": "追跡は一時停止しています。ライブアップデートを有効にするには追跡を開始してください。",
+    "simulatePayment": "支払いをシミュレート"
   },
   "buttons": {
     "downloadPdf": "PDFをダウンロード",

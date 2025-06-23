@@ -39,7 +39,14 @@
     "cornerStylePlaceholder": "Sélectionner le style de coin",
     "displayTextLabel": "Afficher le texte sous le QR",
     "displayTextPlaceholder": "Ex., Scanner pour payer",
-    "scans": "Scans"
+    "scans": "Scans",
+    "trackingStarted": "Suivi en temps réel démarré",
+    "trackingStopped": "Suivi en temps réel arrêté",
+    "newScanDetected": "Un nouveau scan a été détecté",
+    "exportSuccess": "Données d'analyse exportées avec succès",
+    "trackingActiveSubtitle": "Réception d'événements en direct. Cliquez sur 'Simuler le paiement' pour tester.",
+    "trackingInactiveSubtitle": "Le suivi est en pause. Démarrez le suivi pour activer les mises à jour en direct.",
+    "simulatePayment": "Simuler le paiement"
   },
   "buttons": {
     "downloadPdf": "Télécharger en PDF",
