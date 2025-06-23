@@ -39,7 +39,7 @@ const HomePage = () => {
   return (
     <div className={`min-h-screen ${bgColor}`}>
       <div id="home">
-        <Hero />
+        <Hero theme={theme} onThemeToggle={handleThemeToggle} />
       </div>
       <div id="how" style={sectionBgColor}>
         <HowItWorks />
