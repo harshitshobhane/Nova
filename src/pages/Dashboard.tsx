@@ -106,22 +106,22 @@ const Dashboard = () => {
               <span className="bg-[#ececf6] ${highlightText} text-xs font-medium px-2 py-1 rounded">New</span>
             </div>
             <div className="space-y-2 sm:space-y-3">
-              <button className={`w-full flex items-center ${b2cButtonBg} ${b2cButtonText} font-medium px-3 sm:px-5 py-2 sm:py-3 rounded-lg shadow-sm transition-all text-sm sm:text-base gap-2 border ${b2cBadgeBorder}`}>
+              <button onClick={() => navigate('/dashboard/shopping')} className={`w-full flex items-center ${b2cButtonBg} ${b2cButtonText} font-medium px-3 sm:px-5 py-2 sm:py-3 rounded-lg shadow-sm transition-all text-sm sm:text-base gap-2 border ${b2cBadgeBorder}`}>
                 <ShoppingBag className="h-4 w-4 sm:h-5 sm:w-5" />
                 <span className="flex-1 text-left">Shopping</span>
                 <span className={`text-xs ${b2cBadgeBg} rounded px-2 py-0.5 border ${b2cBadgeBorder}`}>5%</span>
               </button>
-              <button className={`w-full flex items-center ${b2cButtonBg} ${b2cButtonText} font-medium px-3 sm:px-5 py-2 sm:py-3 rounded-lg shadow-sm transition-all text-sm sm:text-base gap-2 border ${b2cBadgeBorder}`}>
+              <button onClick={() => navigate('/dashboard/food')} className={`w-full flex items-center ${b2cButtonBg} ${b2cButtonText} font-medium px-3 sm:px-5 py-2 sm:py-3 rounded-lg shadow-sm transition-all text-sm sm:text-base gap-2 border ${b2cBadgeBorder}`}>
                 <Utensils className="h-4 w-4 sm:h-5 sm:w-5" />
                 <span className="flex-1 text-left">Food Delivery</span>
                 <span className={`text-xs ${b2cBadgeBg} rounded px-2 py-0.5 border ${b2cBadgeBorder}`}>10%</span>
               </button>
-              <button className={`w-full flex items-center ${b2cButtonBg} ${b2cButtonText} font-medium px-3 sm:px-5 py-2 sm:py-3 rounded-lg shadow-sm transition-all text-sm sm:text-base gap-2 border ${b2cBadgeBorder}`}>
+              <button onClick={() => navigate('/dashboard/travel')} className={`w-full flex items-center ${b2cButtonBg} ${b2cButtonText} font-medium px-3 sm:px-5 py-2 sm:py-3 rounded-lg shadow-sm transition-all text-sm sm:text-base gap-2 border ${b2cBadgeBorder}`}>
                 <Car className="h-4 w-4 sm:h-5 sm:w-5" />
                 <span className="flex-1 text-left">Travel & Cabs</span>
                 <span className={`text-xs ${b2cBadgeBg} rounded px-2 py-0.5 border ${b2cBadgeBorder}`}>3%</span>
               </button>
-              <button className={`w-full flex items-center ${b2cButtonBg} ${b2cButtonText} font-medium px-3 sm:px-5 py-2 sm:py-3 rounded-lg shadow-sm transition-all text-sm sm:text-base gap-2 border ${b2cBadgeBorder}`}>
+              <button onClick={() => navigate('/dashboard/recharge')} className={`w-full flex items-center ${b2cButtonBg} ${b2cButtonText} font-medium px-3 sm:px-5 py-2 sm:py-3 rounded-lg shadow-sm transition-all text-sm sm:text-base gap-2 border ${b2cBadgeBorder}`}>
                 <Phone className="h-4 w-4 sm:h-5 sm:w-5" />
                 <span className="flex-1 text-left">Recharge & Bills</span>
                 <span className={`text-xs ${b2cBadgeBg} rounded px-2 py-0.5 border ${b2cBadgeBorder}`}>2%</span>

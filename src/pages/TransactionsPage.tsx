@@ -117,7 +117,7 @@ const sampleTransactions = [
     time: '03:45 PM',
     status: 'completed',
     reference: 'CBK-2024-006',
-    merchant: 'NovaPay',
+    merchant: 'YourPay',
     location: 'Mumbai, India'
   },
   {
@@ -538,8 +538,8 @@ const TransactionsPage = () => {
           </div>
         </div>
       )}
-    </div>
-  );
+  </div>
+);
 };
 
 export default TransactionsPage; 

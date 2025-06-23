@@ -44,17 +44,17 @@ const HomePage = () => {
       <div id="how" style={sectionBgColor}>
         <HowItWorks />
         <div id="features" style={sectionBgColor}>
-          <Features />
+          <Features theme={theme} />
         </div>
       </div>
       <div id="pricing" style={sectionBgColor}>
-        <Pricing />
+        <Pricing theme={theme} />
       </div>
       <div id="testimonials" style={sectionBgColor}>
-        <Testimonials />
+        <Testimonials theme={theme} />
       </div>
       <div id="login">
-        <Footer />
+        <Footer theme = {theme} />
       </div>
     </div>
   );

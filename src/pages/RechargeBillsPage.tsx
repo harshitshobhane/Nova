@@ -509,8 +509,8 @@ const RechargeBillsPage = () => {
           </Button>
         </DialogContent>
       </Dialog>
-    </div>
-  );
+  </div>
+);
 };
 
 export default RechargeBillsPage; 
